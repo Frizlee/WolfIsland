@@ -2,6 +2,7 @@
 #include "Prerequisites.hpp"
 #include "gl_core_3_3.hpp"
 #include <glm/mat4x4.hpp>
+#include <glm/vec2.hpp>
 #include "Shader.hpp"
 
 
@@ -22,6 +23,7 @@ public:
 	void bindBuffer(class GpuBuffer &buf, enum class GpuBufferType &type);
 	void bindOrthoMatrix(const glm::mat4& orthoMatrix);
 	void setDepthTest(bool state);
+	void setViewport(const glm::tvec2<std::int32_t>& dimensions);
 
 	void prepareDrawSprite();
 	void prepareDrawText();

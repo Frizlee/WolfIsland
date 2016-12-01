@@ -18,8 +18,6 @@ static const string hareSpriteSheetPath{ "HareSpriteSheet.png" };
 static const string boardSpriteSheetPath{ "GroundSpriteSheet.png" };
 static const string guiSpriteSheetPath{ "GuiSpriteSheet.png" };
 const float Application::spriteSize{ 48.0f };
-const uint32_t Application::windowWidth{ 800 };
-const uint32_t Application::windowHeight{ 600 };
 random_device Application::randomDev;
 
 Application::Application()
@@ -28,14 +26,16 @@ Application::Application()
 {
 }
 
-Application::Application(const std::string& windowTitle, bool fullscreen)
+Application::Application(const std::string& windowTitle, const glm::tvec2<int32_t>& dimensions,
+	bool fullscreen)
 	: mWnd{ nullptr }, mIsGlfw{ false }, mTourTimer{ 0.0f }, mCameraMoveMultiplier{ 1.0f },
 	mState{ State::MENU }, mColorChange{ 0.0f }
 {
-	init(windowTitle, fullscreen);
+	init(windowTitle, dimensions, fullscreen);
 }
 
-void Application::init(const std::string& windowTitle, bool fullscreen)
+void Application::init(const std::string& windowTitle, const glm::tvec2<int32_t>& dimensions,
+	bool fullscreen)
 {
 	if (mIsGlfw || glfwInit() == GLFW_FALSE)
 		throw ApplicationInitException();
@@ -45,7 +45,7 @@ void Application::init(const std::string& windowTitle, bool fullscreen)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, openglVersionMajor);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, openglVersionMinor);
 
-	mWnd = glfwCreateWindow(windowWidth, windowHeight, windowTitle.c_str(),
+	mWnd = glfwCreateWindow(dimensions.x, dimensions.y, windowTitle.c_str(),
 		fullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
 
 	if (!mWnd)
@@ -53,12 +53,13 @@ void Application::init(const std::string& windowTitle, bool fullscreen)
 
 	glfwSetWindowUserPointer(mWnd, this);
 	glfwSetScrollCallback(mWnd, GlfwScrollCallback);
+	glfwSetFramebufferSizeCallback(mWnd, GlfwFramebufferSizeCallback);
 
 	glfwMakeContextCurrent(mWnd);
 	glfwSwapInterval(0);
 	mRenderer.init();
+	mRenderer.setViewport(glm::tvec2<int32_t>{ dimensions.x, dimensions.y });
 	gl::ClearColor(oceanColorMin.r, oceanColorMin.g, oceanColorMin.b, 1.0f);
-	gl::Viewport(0, 0, windowWidth, windowHeight);
 	gl::Enable(gl::BLEND);
 	gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
 
@@ -113,8 +114,8 @@ void Application::init(const std::string& windowTitle, bool fullscreen)
 		glm::vec2{ 0.0f, -20.0f }, mRenderer);
 
 	// Create ortho matrix
-	mOrthoMatrix = glm::ortho(-(windowWidth / 2.0f), windowWidth / 2.0f,
-		-(windowHeight / 2.0f), windowHeight / 2.0f);
+	mOrthoMatrix = glm::ortho(-(dimensions.x / 2.0f), dimensions.x / 2.0f,
+		-(dimensions.y / 2.0f), dimensions.y / 2.0f);
 }
 
 
@@ -300,6 +301,16 @@ Renderer& Application::getRenderer()
 	return mRenderer;
 }
 
+glm::tvec2<int32_t> Application::getDimensions()
+{
+	int32_t width;
+	int32_t height;
+
+	glfwGetFramebufferSize(mWnd, &width, &height);
+
+	return glm::tvec2<int32_t>{ width, height };
+}
+
 int32_t Application::getLastScrollAction()
 {
 	int32_t lastScroll = mVerticalScroll;
@@ -319,10 +330,12 @@ bool Application::getMouseButtonState(int keyCode)
 
 glm::vec2 Application::getMousePosition()
 {
+	auto dim = getDimensions();
+
 	glm::tvec2<double> pos;
 	glfwGetCursorPos(mWnd, &pos.x, &pos.y);
 
-	return glm::vec2{ static_cast<float>(pos.x), static_cast<float>(windowHeight - pos.y) };
+	return glm::vec2{ static_cast<float>(pos.x), static_cast<float>(dim.y - pos.y) };
 }
 
 void Application::spawnWolf(glm::tvec2<int32_t> pos)
@@ -355,6 +368,16 @@ void Application::GlfwScrollCallback(GLFWwindow* window, double xoffset, double 
 	Application* app{ static_cast<Application*>(glfwGetWindowUserPointer(window)) };
 
 	app->mVerticalScroll = static_cast<int32_t>(yoffset);
+}
+
+void Application::GlfwFramebufferSizeCallback(GLFWwindow * window, int width, int height)
+{
+	Application* app{ static_cast<Application*>(glfwGetWindowUserPointer(window)) };
+
+
+	app->mRenderer.setViewport(glm::tvec2<int32_t>{ width, height });
+	app->mOrthoMatrix = glm::ortho(-(width / 2.0f), width / 2.0f,
+			-(height / 2.0f), height / 2.0f);
 }
 
 void Application::setupBoard()
@@ -840,5 +863,9 @@ void Application::setupBoardSpriteSheet()
 	mBoardSpriteSheet->addSprite(make_shared<Sprite>(spriteSize,
 		glm::vec2{ 96.0f / w, 96.0f / h }, glm::vec2{ 144.0f / w, 144.0f / h }, 
 		0.0f, spriteTex, mVaoSpriteInstanced, mRenderer));
+}
+
+void Application::setupGuiSpriteSheet()
+{
 }
 

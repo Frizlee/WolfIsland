@@ -97,9 +97,10 @@ inline void Slider<T>::draw(Renderer& renderer) const
 template<typename T>
 inline void Slider<T>::grabInput(const glm::mat4& orthoMatrix, Application& app)
 {
+	auto dim = app.getDimensions();
 	auto pos{ app.getMousePosition() };
-	auto normPos = glm::vec4{ 2 * pos.x / Application::windowWidth - 1.0f, 
-		2 * pos.y / Application::windowHeight - 1.0f, 0.0f, 1.0f };
+	auto normPos = glm::vec4{ 2 * pos.x / dim.x - 1.0f, 
+		2 * pos.y / dim.y - 1.0f, 0.0f, 1.0f };
 
 	auto boundsLowerLeft = orthoMatrix * glm::vec4{ mPos + mButtonPos, 0.0f, 1.0f };
 	auto boundsUpperRight = orthoMatrix * glm::vec4{ mPos + mButtonPos + mButton->getBounds(), 

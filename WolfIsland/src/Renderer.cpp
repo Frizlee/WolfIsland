@@ -166,6 +166,11 @@ void Renderer::setDepthTest(bool state)
 		gl::Disable(gl::DEPTH_TEST);
 }
 
+void Renderer::setViewport(const glm::tvec2<int32_t>& dimensions)
+{
+	gl::Viewport(0, 0, dimensions.x, dimensions.y);
+}
+
 void Renderer::prepareDrawSprite()
 {
 	if (mSetup == Setup::SPRITE)

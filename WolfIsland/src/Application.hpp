@@ -15,6 +15,7 @@
 #include "VertexBuffer.hpp"
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
 #include <glm/gtx/transform.hpp>
 #include "Board.hpp"
 #include "Slider.hpp"
@@ -35,10 +36,12 @@ public:
 	Application();
 	
 	// Constructor which calls function "init"
-	Application(const std::string& windowTitle,	bool fullscreen = false);
+	Application(const std::string& windowTitle, const glm::tvec2<std::int32_t>& dimensions,
+		bool fullscreen = false);
 
 	// Function which initializes application data and creates window
-	void init(const std::string& windowTitle, bool fullscreen = false);
+	void init(const std::string& windowTitle, const glm::tvec2<std::int32_t>& dimensions,
+		bool fullscreen = false);
 
 	// Default destructor
 	~Application();
@@ -60,6 +63,8 @@ public:
 
 	Renderer& getRenderer();
 
+	glm::tvec2<std::int32_t> getDimensions();
+
 	std::int32_t getLastScrollAction();
 	bool getKeyState(int keyCode);
 	bool getMouseButtonState(int keyCode);
@@ -69,10 +74,9 @@ public:
 	void spawnHare(glm::tvec2<std::int32_t> pos);
 
 	static const float spriteSize;
-	static const std::uint32_t windowWidth;
-	static const std::uint32_t windowHeight;
 	static std::random_device randomDev;
 	static void GlfwScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+	static void GlfwFramebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 private:
 	// Window and rendering
