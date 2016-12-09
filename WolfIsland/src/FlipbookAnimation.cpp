@@ -81,5 +81,8 @@ weak_ptr<const class Sprite> FlipbookAnimation::getCurrentSprite() const
 {
 	uint32_t index = static_cast<uint32_t>((mCurrentTime / mDuration) * mKeyFramesIndices.size());
 
+	if (index == mKeyFramesIndices.size())
+		index = 0;
+
 	return mSpriteSheet->getSprite(mKeyFramesIndices[index]);
 }

@@ -122,6 +122,8 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Board.cpp" />
+    <ClCompile Include="src\Boulder.cpp" />
+    <ClCompile Include="src\Bush.cpp" />
     <ClCompile Include="src\Codec.cpp" />
     <ClCompile Include="src\FlipbookAnimation.cpp" />
     <ClCompile Include="src\SpriteSheet.cpp" />
@@ -152,6 +154,8 @@
   <ItemGroup>
     <ClInclude Include="src\Application.hpp" />
     <ClInclude Include="src\Board.hpp" />
+    <ClInclude Include="src\Boulder.hpp" />
+    <ClInclude Include="src\Bush.hpp" />
     <ClInclude Include="src\Codec.hpp" />
     <ClInclude Include="src\FlipbookAnimation.hpp" />
     <ClInclude Include="src\SpriteSheet.hpp" />

@@ -114,7 +114,14 @@ void WolfMale::updateMove(Board& board)
 			{
 				if (obj->getSavedPos() == movePos)
 				{
-					if (obj->getObjectType() == "hare")
+					if (obj->getObjectType() == "boulder" || obj->getObjectType() == "bush")
+					{
+						canMove = false;
+						harePos = -1;
+						wolfFemalePos = -1;
+						break;
+					}
+					else if (obj->getObjectType() == "hare")
 						harePos = movePosVec.size();
 					else if (mMateTourTimer == 0 && obj->getObjectType() == "wolf_female")
 					{

@@ -69,9 +69,12 @@ public:
 	bool getKeyState(int keyCode);
 	bool getMouseButtonState(int keyCode);
 	glm::vec2 getMousePosition();
+	glm::vec4 getMouseNormalizedPosition();
 
 	void spawnWolf(glm::tvec2<std::int32_t> pos);
 	void spawnHare(glm::tvec2<std::int32_t> pos);
+	void spawnBoulder(glm::tvec2<std::int32_t> pos);
+	void spawnBush(glm::tvec2<std::int32_t> pos);
 
 	static const float spriteSize;
 	static std::random_device randomDev;
@@ -92,6 +95,9 @@ private:
 	std::shared_ptr<SpriteSheet> mWolfFemaleSpriteSheet;
 	std::shared_ptr<SpriteSheet> mHareSpriteSheet;
 	std::shared_ptr<SpriteSheet> mBoardSpriteSheet;
+	std::shared_ptr<SpriteSheet> mGuiSpriteSheet;
+	std::shared_ptr<Sprite> mBoulderSprite;
+	std::shared_ptr<Sprite> mBushSprite;
 
 	// Simulation objects
 	Board mBoard;
@@ -108,18 +114,24 @@ private:
 	std::shared_ptr<VertexArray> mVaoSpriteInstanced;
 
 	glm::mat4 mOrthoMatrix;
+	glm::mat4 mCameraMatrix;
 	std::int32_t mVerticalScroll;
 	glm::vec2 mCameraPos;
 	glm::vec2 mCameraMoveDir;
 	float mCameraMoveMultiplier;
 	float mCameraZoom;
 	float mTourTimer;
+	char mSpawnObjectTypeKey;
+	bool mObjectAlreadySpawned;
+	glm::tvec2<std::int32_t> mSpawnPos;
 
 	enum class State
 	{
 		MENU,
 		SIMULATION
 	} mState;
+
+	glm::tvec2<std::int32_t> getMouseoverSpawnPosition();
 
 	void setupBoard();
 	void setupWolfMaleSpriteSheet();

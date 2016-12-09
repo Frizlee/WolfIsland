@@ -105,6 +105,12 @@
     <ClCompile Include="src\FlipbookAnimation.cpp">
       <Filter>Source Files\RenderSystem</Filter>
     </ClCompile>
+    <ClCompile Include="src\Boulder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp">
@@ -190,6 +196,12 @@
     </ClInclude>
     <ClInclude Include="src\FlipbookAnimation.hpp">
       <Filter>Header Files\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Boulder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bush.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

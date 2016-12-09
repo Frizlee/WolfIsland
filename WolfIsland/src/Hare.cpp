@@ -108,7 +108,8 @@ void Hare::updateMove(Board& board)
 			{
 				if (obj->getSavedPos() == movePos)
 				{
-					// Put other objects relations
+					if (obj->getObjectType() == "boulder")
+						canMove = false;
 				}
 			}
 
@@ -255,9 +256,6 @@ void Hare::setEaten(bool state)
 	if (state)
 	{
 		mActive = false;
-		/*mAnimations[mCurrentAnimation].stop();
-		mAnimations[8].start();
-		mCurrentAnimation = 8;*/
 		mCurrentIdle = 8;
 	}
 }

@@ -2,6 +2,8 @@
 #include "WolfMale.hpp"
 #include "WolfFemale.hpp"
 #include "Hare.hpp"
+#include "Boulder.hpp"
+#include "Bush.hpp"
 using namespace std;
 
 static const int openglVersionMajor{ 3 };
@@ -17,19 +19,23 @@ static const string wolfFemaleSpriteSheetPath{ "WolfFemaleSpriteSheet.png" };
 static const string hareSpriteSheetPath{ "HareSpriteSheet.png" };
 static const string boardSpriteSheetPath{ "GroundSpriteSheet.png" };
 static const string guiSpriteSheetPath{ "GuiSpriteSheet.png" };
+static const string boulderSpritePath{ "BoulderSprite.png" };
+static const string bushSpritePath{ "BushSprite.png" };
 const float Application::spriteSize{ 48.0f };
 random_device Application::randomDev;
 
 Application::Application()
 	: mWnd{ nullptr }, mIsGlfw{ false }, mTourTimer{ 0.0f }, mCameraMoveMultiplier{ 1.0f },
-	mState{ State::MENU }, mColorChange{ 0.0f }
+	mState{ State::MENU }, mColorChange{ 0.0f }, mObjectAlreadySpawned{ false },
+	mSpawnObjectTypeKey{ 'n' }
 {
 }
 
 Application::Application(const std::string& windowTitle, const glm::tvec2<int32_t>& dimensions,
 	bool fullscreen)
 	: mWnd{ nullptr }, mIsGlfw{ false }, mTourTimer{ 0.0f }, mCameraMoveMultiplier{ 1.0f },
-	mState{ State::MENU }, mColorChange{ 0.0f }
+	mState{ State::MENU }, mColorChange{ 0.0f }, mObjectAlreadySpawned{ false }, 
+	mSpawnObjectTypeKey{ 'n' }
 {
 	init(windowTitle, dimensions, fullscreen);
 }
@@ -77,25 +83,42 @@ void Application::init(const std::string& windowTitle, const glm::tvec2<int32_t>
 	mVaoSpriteInstanced = make_shared<VertexArray>(
 		make_shared<VertexBuffer<TextureVertexLayout>>(1024, mRenderer), mRenderer);
 
+	// Resources
 	setupWolfMaleSpriteSheet();
 	setupWolfFemaleSpriteSheet();
 	setupHareSpriteSheet();
 	setupBoardSpriteSheet();
+	setupGuiSpriteSheet();
+
+	// Boulder sprite
+	{
+		Image spriteImg;
+		ifstream spriteFile{ boulderSpritePath, ios_base::binary };
+		PngCodec{}.decode(spriteFile, spriteImg);
+		shared_ptr<Texture> spriteTex = make_shared<Texture>(spriteImg, mRenderer);
+		spriteTex->generateMipmaps(mRenderer);
+
+		glm::vec2 spriteSize{ Application::spriteSize, Application::spriteSize };
+		
+		mBoulderSprite = make_shared<Sprite>(spriteSize, glm::vec2{ 0.0f, 0.0f }, 
+			glm::vec2{ 1.0f, 1.0f }, 0.0f, spriteTex, mVaoSprite, mRenderer);
+	}
+
+	// Bush sprite
+	{
+		Image spriteImg;
+		ifstream spriteFile{ bushSpritePath, ios_base::binary };
+		PngCodec{}.decode(spriteFile, spriteImg);
+		shared_ptr<Texture> spriteTex = make_shared<Texture>(spriteImg, mRenderer);
+		spriteTex->generateMipmaps(mRenderer);
+
+		glm::vec2 spriteSize{ Application::spriteSize, Application::spriteSize };
+
+		mBushSprite = make_shared<Sprite>(spriteSize, glm::vec2{ 0.0f, 0.0f },
+			glm::vec2{ 1.0f, 1.0f }, 0.0f, spriteTex, mVaoSprite, mRenderer);
+	}
 
 	// Sliders
-	Image guiSpriteImg;
-	ifstream guiSpriteFile{ guiSpriteSheetPath, ios_base::binary };
-	PngCodec{}.decode(guiSpriteFile, guiSpriteImg);
-	shared_ptr<Texture> guiSpriteTex = make_shared<Texture>(guiSpriteImg, mRenderer);
-	guiSpriteTex->generateMipmaps(mRenderer);
-	shared_ptr<Sprite> sliderSprite = make_shared<Sprite>(
-		glm::vec2{ 208.0f, 15.0f }, glm::vec2{ 0 / 1024.0f, 0 / 1024.0f },
-		glm::vec2{ 208.0f / 1024.0f, 15.0f / 1024.0f }, 1.0f, guiSpriteTex,
-		mVaoSprite, mRenderer);
-	shared_ptr<Sprite> buttonSprite = make_shared<Sprite>(
-		glm::vec2{ 22.0f, 33.0f }, glm::vec2{ 0 / 1024.0f, 15.0f / 1024.0f },
-		glm::vec2{ 22.0f / 1024.0f, 48.0f / 1024.0f }, 1.0f, guiSpriteTex,
-		mVaoSprite, mRenderer);
 	shared_ptr<Text> sliderWidthText = make_shared<Text>(string{}, mFnt, mVaoText, 0, mRenderer);
 	shared_ptr<Text> sliderHeightText = make_shared<Text>(string{}, mFnt, mVaoText, 
 		18 * TextVertexLayout::Size(), mRenderer);
@@ -104,13 +127,13 @@ void Application::init(const std::string& windowTitle, const glm::tvec2<int32_t>
 	shared_ptr<Text> sliderHareCountText = make_shared<Text>(string{}, mFnt, mVaoText, 
 		48 * TextVertexLayout::Size(), mRenderer);
 
-	mWidthSlider.create(sliderSprite, buttonSprite, sliderWidthText, 2, 200, 
+	mWidthSlider.create(mGuiSpriteSheet, sliderWidthText, 2, 200, 
 		glm::vec2{ 0.0f, 40.0f }, mRenderer);
-	mHeightSlider.create(sliderSprite, buttonSprite, sliderHeightText, 2, 200, 
+	mHeightSlider.create(mGuiSpriteSheet, sliderHeightText, 2, 200, 
 		glm::vec2{ 0.0f, 20.0f }, mRenderer);
-	mWolfCountSlider.create(sliderSprite, buttonSprite, sliderWolfCountText, 0, 50, 
+	mWolfCountSlider.create(mGuiSpriteSheet, sliderWolfCountText, 0, 50, 
 		glm::vec2{ 0.0f, 0.0f }, mRenderer);
-	mHareCountSlider.create(sliderSprite, buttonSprite, sliderHareCountText, 0, 50, 
+	mHareCountSlider.create(mGuiSpriteSheet, sliderHareCountText, 0, 50, 
 		glm::vec2{ 0.0f, -20.0f }, mRenderer);
 
 	// Create ortho matrix
@@ -164,108 +187,182 @@ void Application::run()
 void Application::grabInput()
 {
 	glfwPollEvents();
-	if (mState == State::MENU)
-	{
-		mWidthSlider.grabInput(mOrthoMatrix, *this);
-		mHeightSlider.grabInput(mOrthoMatrix, *this);
-		mWolfCountSlider.grabInput(mOrthoMatrix, *this);
-		mHareCountSlider.grabInput(mOrthoMatrix, *this);
 
-		if (getKeyState(GLFW_KEY_ENTER))
+	switch (mState)
+	{
+	case State::MENU:
 		{
-			setupBoard();
-			mState = State::SIMULATION;
+			mWidthSlider.grabInput(mOrthoMatrix, *this);
+			mHeightSlider.grabInput(mOrthoMatrix, *this);
+			mWolfCountSlider.grabInput(mOrthoMatrix, *this);
+			mHareCountSlider.grabInput(mOrthoMatrix, *this);
+
+			if (getKeyState(GLFW_KEY_ENTER))
+			{
+				setupBoard();
+				mState = State::SIMULATION;
+			}
+			break;
 		}
-	}
-	if (mState == State::SIMULATION)
-	{
-		mCameraMoveDir = { 0.0f, 0.0f };
 
-		if (getKeyState(GLFW_KEY_UP) || getKeyState(GLFW_KEY_W))
-			mCameraMoveDir += glm::vec2{ 0.0f, -1.0f };
+	case State::SIMULATION:
+		{
+			mCameraMoveDir = { 0.0f, 0.0f };
 
-		if (getKeyState(GLFW_KEY_DOWN) || getKeyState(GLFW_KEY_S))
-			mCameraMoveDir += glm::vec2{ 0.0f, 1.0f };
+			if (getKeyState(GLFW_KEY_UP) || getKeyState(GLFW_KEY_W))
+				mCameraMoveDir += glm::vec2{ 0.0f, -1.0f };
 
-		if (getKeyState(GLFW_KEY_LEFT) || getKeyState(GLFW_KEY_A))
-			mCameraMoveDir += glm::vec2{ 1.0f, 0.0f };
+			if (getKeyState(GLFW_KEY_DOWN) || getKeyState(GLFW_KEY_S))
+				mCameraMoveDir += glm::vec2{ 0.0f, 1.0f };
 
-		if (getKeyState(GLFW_KEY_RIGHT) || getKeyState(GLFW_KEY_D))
-			mCameraMoveDir += glm::vec2{ -1.0f, 0.0f };
+			if (getKeyState(GLFW_KEY_LEFT) || getKeyState(GLFW_KEY_A))
+				mCameraMoveDir += glm::vec2{ 1.0f, 0.0f };
 
-		if (getKeyState(GLFW_KEY_1))
-			mCameraMoveMultiplier = 1.0f;
+			if (getKeyState(GLFW_KEY_RIGHT) || getKeyState(GLFW_KEY_D))
+				mCameraMoveDir += glm::vec2{ -1.0f, 0.0f };
 
-		if (getKeyState(GLFW_KEY_2))
-			mCameraMoveMultiplier = 2.0f;
+			if (getKeyState(GLFW_KEY_1))
+				mCameraMoveMultiplier = 1.0f;
 
-		if (getKeyState(GLFW_KEY_3))
-			mCameraMoveMultiplier = 3.0f;
+			if (getKeyState(GLFW_KEY_2))
+				mCameraMoveMultiplier = 2.0f;
 
-		if (getKeyState(GLFW_KEY_4))
-			mCameraMoveMultiplier = 4.0f;
+			if (getKeyState(GLFW_KEY_3))
+				mCameraMoveMultiplier = 3.0f;
 
-		mCameraZoom += getLastScrollAction() * cameraZoomUnit;
+			if (getKeyState(GLFW_KEY_4))
+				mCameraMoveMultiplier = 4.0f;
+
+			if (getKeyState(GLFW_KEY_B))
+				mSpawnObjectTypeKey = 'b'; // boulder
+
+			if (getKeyState(GLFW_KEY_G))
+				mSpawnObjectTypeKey = 'g'; // bush
+
+			if (getKeyState(GLFW_KEY_V))
+				mSpawnObjectTypeKey = 'v'; // wolf
+
+			if (getKeyState(GLFW_KEY_H))
+				mSpawnObjectTypeKey = 'h'; // hare
+
+			if (getKeyState(GLFW_KEY_N))
+				mSpawnObjectTypeKey = 'n'; // no object
+			
+			if (getMouseButtonState(GLFW_MOUSE_BUTTON_1))
+			{
+				auto pos = getMouseoverSpawnPosition();
+
+				if (mSpawnPos != pos)
+					mObjectAlreadySpawned = false;
+
+				mSpawnPos = pos;
+			}
+
+			mCameraZoom += getLastScrollAction() * cameraZoomUnit;
+			std::cout << mCameraZoom << std::endl;
+			mCameraZoom = glm::clamp(mCameraZoom, 0.3f, 3.0f);
+			break;
+		}
 	}
 }
 
 void Application::calculateLogic(double deltaTime)
 {
-	if (mState == State::SIMULATION)
+	switch (mState)
 	{
-		mCameraMoveDir = mCameraMoveDir == glm::vec2{ 0.0f, 0.0f } ? glm::vec2{ 0.0f, 0.0f } :
-			glm::normalize(mCameraMoveDir);
-		mCameraPos += static_cast<float>(deltaTime) * mCameraMoveDir * cameraMoveVelocity *
-			mCameraMoveMultiplier;
-
-		mTourTimer += static_cast<float>(deltaTime);
-
-		if (mTourTimer >= tourTime)
+	case State::SIMULATION:
 		{
-			mBoard.updateTurn(*this);
+			mCameraMoveDir = mCameraMoveDir == glm::vec2{ 0.0f, 0.0f } ? glm::vec2{ 0.0f, 0.0f } :
+				glm::normalize(mCameraMoveDir);
+			mCameraPos += static_cast<float>(deltaTime) * mCameraMoveDir * cameraMoveVelocity *
+				mCameraMoveMultiplier;
 
-			// Update only active objects
-			for (auto& obj : mBoard.getObjects())
+			mTourTimer += static_cast<float>(deltaTime);
+
+			if (mTourTimer >= tourTime)
 			{
-				if (!obj->isActive())
-					continue;
+				mBoard.updateTurn(*this);
 
-				obj->saveCurrentPos();
+				// Update only active objects
+				for (auto& obj : mBoard.getObjects())
+				{
+					if (!obj->isActive())
+						continue;
+
+					obj->saveCurrentPos();
+				}
+
+				for (auto& obj : mBoard.getObjects())
+				{
+					if (!obj->isActive())
+						continue;
+
+					obj->updateMove(mBoard);
+				}
+
+				for (auto& obj : mBoard.getObjects())
+				{
+					if (!obj->isActive())
+						continue;
+
+					obj->updateAction(mBoard);
+				}
+
+				mTourTimer = 0.0f;
 			}
 
-			for (auto& obj : mBoard.getObjects())
-			{
-				if (!obj->isActive())
-					continue;
+			mColorChange += deltaTime * colorChangeVelocity;
 
-				obj->updateMove(mBoard);
+			mCameraMatrix = mOrthoMatrix * 
+				glm::scale(glm::vec3{ mCameraZoom, mCameraZoom, 1.0f }) *
+				glm::translate(glm::vec3{ mCameraPos, 0.0f });
+
+			if (!mObjectAlreadySpawned)
+			{
+				switch (mSpawnObjectTypeKey)
+				{
+				case 'b':
+					spawnBoulder(mSpawnPos);
+					break;
+
+				case 'g':
+					spawnBush(mSpawnPos);
+					break;
+
+				case 'v':
+					spawnWolf(mSpawnPos);
+					break;
+
+				case 'h':
+					spawnHare(mSpawnPos);
+					break;
+
+				case 'n': // No object to spawn
+					break;
+				}
+
+				mObjectAlreadySpawned = true;
 			}
 
-			for (auto& obj : mBoard.getObjects())
-			{
-				if (!obj->isActive())
-					continue;
-
-				obj->updateAction(mBoard);
-			}
-
-			mTourTimer = 0.0f;
+			break;
 		}
-
-		mColorChange += deltaTime * colorChangeVelocity;
 	}
 }
 
 void Application::animationUpdate(double deltaTime)
 {
-	if (mState == State::SIMULATION)
+	switch (mState)
 	{
-		// Update all objects
-		for (auto& obj : mBoard.getObjects())
-			obj->update(deltaTime);
+	case State::SIMULATION:
+		{
+			// Update all objects
+			for (auto& obj : mBoard.getObjects())
+				obj->update(deltaTime);
 
-		auto color = glm::mix(oceanColorMin, oceanColorMax, (glm::sin(mColorChange) + 1.0f) / 2.0f);
-		gl::ClearColor(color.r, color.g, color.b, 1.0f);
+			auto color = glm::mix(oceanColorMin, oceanColorMax, 
+				(glm::sin(mColorChange) + 1.0f) / 2.0f);
+			gl::ClearColor(color.r, color.g, color.b, 1.0f);
+		}
 	}
 }
 
@@ -273,26 +370,37 @@ void Application::renderScene()
 {
 	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 
-	if (mState == State::MENU)
+	switch (mState)
 	{
-		mRenderer.bindOrthoMatrix(mOrthoMatrix);
-		mWidthSlider.draw(mRenderer);
-		mHeightSlider.draw(mRenderer);
-		mWolfCountSlider.draw(mRenderer);
-		mHareCountSlider.draw(mRenderer);
-	}
-	if (mState == State::SIMULATION)
-	{
-		auto cameraMatrix = mOrthoMatrix * glm::scale(glm::vec3{ mCameraZoom, mCameraZoom, 1.0f }) *
-			glm::translate(glm::vec3{ mCameraPos, 0.0f });
+	case State::MENU:
+		{
+			// Render menu interface 
+			mRenderer.bindOrthoMatrix(mOrthoMatrix);
+			mWidthSlider.draw(mRenderer);
+			mHeightSlider.draw(mRenderer);
+			mWolfCountSlider.draw(mRenderer);
+			mHareCountSlider.draw(mRenderer);
+			break;
+		}
 
-		mRenderer.bindOrthoMatrix(cameraMatrix);
+	case State::SIMULATION:
+		{
+			// Render simulation objects
+			mRenderer.bindOrthoMatrix(mCameraMatrix);
 
-		mBoard.draw(mRenderer);
+			mBoard.draw(mRenderer);
 
-		// Render all objects
-		for (auto& obj : mBoard.getObjects())
-			obj->draw(mRenderer);
+			for (auto& obj : mBoard.getObjects())
+				obj->draw(mRenderer);
+
+			// Render user interface
+			mRenderer.bindOrthoMatrix(mOrthoMatrix);
+			auto dim = getDimensions();
+			mRenderer.prepareDrawSprite();
+			mRenderer.drawSprite(*mGuiSpriteSheet->getSprite(2).lock(),
+				glm::translate(glm::vec3{ -dim.x / 2, 0.0f, 0.0f }));
+			break;
+		}
 	}
 }
 
@@ -338,6 +446,15 @@ glm::vec2 Application::getMousePosition()
 	return glm::vec2{ static_cast<float>(pos.x), static_cast<float>(dim.y - pos.y) };
 }
 
+glm::vec4 Application::getMouseNormalizedPosition()
+{
+	auto dim = getDimensions();
+	auto pos = getMousePosition();
+	pos = 2.0f * pos / glm::vec2{ static_cast<float>(dim.x), static_cast<float>(dim.y) } - 1.0f;
+
+	return glm::vec4{ pos.x, pos.y, 0.0f, 1.0f };
+}
+
 void Application::spawnWolf(glm::tvec2<int32_t> pos)
 {
 	uniform_int_distribution<int32_t> dist{ 0, 1 };
@@ -363,6 +480,20 @@ void Application::spawnHare(glm::tvec2<int32_t> pos)
 	mBoard.addGameObject(dynamic_pointer_cast<GameObject>(hare));
 }
 
+void Application::spawnBoulder(glm::tvec2<std::int32_t> pos)
+{
+	auto boulder = make_shared<Boulder>(mBoulderSprite);
+	boulder->setPos(pos);
+	mBoard.addGameObject(dynamic_pointer_cast<GameObject>(boulder));
+}
+
+void Application::spawnBush(glm::tvec2<std::int32_t> pos)
+{
+	auto bush = make_shared<Bush>(mBushSprite);
+	bush->setPos(pos);
+	mBoard.addGameObject(dynamic_pointer_cast<GameObject>(bush));
+}
+
 void Application::GlfwScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	Application* app{ static_cast<Application*>(glfwGetWindowUserPointer(window)) };
@@ -378,6 +509,15 @@ void Application::GlfwFramebufferSizeCallback(GLFWwindow * window, int width, in
 	app->mRenderer.setViewport(glm::tvec2<int32_t>{ width, height });
 	app->mOrthoMatrix = glm::ortho(-(width / 2.0f), width / 2.0f,
 			-(height / 2.0f), height / 2.0f);
+}
+
+glm::tvec2<int32_t> Application::getMouseoverSpawnPosition()
+{
+	auto pos = getMouseNormalizedPosition() * glm::inverse(mCameraMatrix)
+		- glm::vec4{ mCameraPos.x, mCameraPos.y, mCameraPos.x, 0.0f };
+	pos /= spriteSize;
+	
+	return glm::tvec2<int32_t>{ static_cast<int32_t>(pos.x), static_cast<int32_t>(pos.y) };
 }
 
 void Application::setupBoard()
@@ -867,5 +1007,33 @@ void Application::setupBoardSpriteSheet()
 
 void Application::setupGuiSpriteSheet()
 {
+	Image spriteImg;
+	ifstream spriteFile{ guiSpriteSheetPath, ios_base::binary };
+	PngCodec{}.decode(spriteFile, spriteImg);
+	shared_ptr<Texture> spriteTex = make_shared<Texture>(spriteImg, mRenderer);
+	spriteTex->generateMipmaps(mRenderer);
+
+	mGuiSpriteSheet = make_shared<SpriteSheet>();
+
+	auto w = spriteImg.getWidth(), h = spriteImg.getHeight();
+	glm::vec2 spriteSize{ Application::spriteSize, Application::spriteSize };
+
+	// Data to specific image file
+	// Don't change it
+
+	// Slider
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 208.0f, 15.0f },
+		glm::vec2{ 0.0f / w, 0.0f / h }, glm::vec2{ 208.0f / w, 15.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+	// Slider button
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 22.0f, 33.0f },
+		glm::vec2{ 0.0f / w, 15.0f / h }, glm::vec2{ 22.0f / w, 48.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+	// Object list panel
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 320.0f, 179.0f },
+		glm::vec2{ 0.0f / w, 48.0f / h }, glm::vec2{ 320.0f / w, 227.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
 }
 

@@ -9,11 +9,9 @@ class Slider : public GuiObject
 public:
 	Slider();
 
-	Slider(std::shared_ptr<class Sprite> sliderSprite, std::shared_ptr<class Sprite> buttonSprite,
-		std::shared_ptr<class Text> text, const T& minValue, const T& maxValue, 
-		const glm::vec2& pos, class Renderer& renderer);
-	void create(std::shared_ptr<class Sprite> sliderSprite, 
-		std::shared_ptr<class Sprite> buttonSprite, std::shared_ptr<class Text> text,
+	Slider(std::shared_ptr<class SpriteSheet> guiSpriteSheet, std::shared_ptr<class Text> text, 
+		const T& minValue, const T& maxValue, const glm::vec2& pos, class Renderer& renderer);
+	void create(std::shared_ptr<class SpriteSheet> guiSpriteSheet, std::shared_ptr<class Text> text,
 		const T& minValue, const T& maxValue, const glm::vec2& pos, class Renderer& renderer);
 
 	~Slider();
@@ -27,6 +25,9 @@ public:
 
 
 private:
+	static constexpr std::uint32_t sliderIndex();
+	static constexpr std::uint32_t  buttonIndex();
+
 	glm::vec2 mPos;
 	glm::vec2 mButtonPos;
 	glm::vec2 mTextPos;
@@ -37,8 +38,7 @@ private:
 
 	bool mClicked;
 
-	std::shared_ptr<class Sprite> mSlider;
-	std::shared_ptr<class Sprite> mButton;
+	std::shared_ptr<class SpriteSheet> mGuiSpriteSheet;
 	std::shared_ptr<class Text> mText;
 };
 
@@ -48,27 +48,30 @@ inline Slider<T>::Slider()
 }
 
 template<typename T>
-inline Slider<T>::Slider(std::shared_ptr<class Sprite> sliderSprite, 
-	std::shared_ptr<class Sprite> buttonSprite, std::shared_ptr<class Text> text, const T& minValue,
-	const T& maxValue, const glm::vec2& pos, class Renderer& renderer)
+inline Slider<T>::Slider(std::shared_ptr<class SpriteSheet> guiSpriteSheet, 
+	std::shared_ptr<class Text> text, const T& minValue, const T& maxValue, const glm::vec2& pos, 
+	class Renderer& renderer)
 {
-	create(sliderSprite, buttonSprite, minValue, maxValue, pos);
+	create(guiSpriteSheet, minValue, maxValue, pos);
 }
 
 template<typename T>
-inline void Slider<T>::create(std::shared_ptr<class Sprite> sliderSprite, 
-	std::shared_ptr<class Sprite> buttonSprite, std::shared_ptr<class Text> text, const T& minValue,
-	const T& maxValue, const glm::vec2& pos, class Renderer& renderer)
+inline void Slider<T>::create(std::shared_ptr<class SpriteSheet> guiSpriteSheet,
+	std::shared_ptr<class Text> text, const T& minValue, const T& maxValue, const glm::vec2& pos, 
+	class Renderer& renderer)
 {
-	mSlider = sliderSprite;
-	mButton = buttonSprite;
+	mGuiSpriteSheet = guiSpriteSheet;
 	mText = text;
 	mMinValue = minValue;
 	mMaxValue = maxValue;
 	mValue = minValue;
 	mPos = pos;
-	mButtonPos = glm::vec2{ 0.0f, -(mButton->getBounds().y - mSlider->getBounds().y) / 2.0f };
-	mTextPos = glm::vec2{ mSlider->getBounds().x + 7.0f, mSlider->getBounds().y + 3.0f };
+
+	auto sliderBounds = mGuiSpriteSheet->getSprite(sliderIndex()).lock()->getBounds();
+	auto buttonBounds = mGuiSpriteSheet->getSprite(buttonIndex()).lock()->getBounds();
+
+	mButtonPos = glm::vec2{ 0.0f, -(buttonBounds.y - sliderBounds.y) / 2.0f };
+	mTextPos = glm::vec2{ sliderBounds.x + 7.0f, sliderBounds.y + 3.0f };
 
 	std::stringstream str;
 	str << mValue;
@@ -84,10 +87,12 @@ template<typename T>
 inline void Slider<T>::draw(Renderer& renderer) const
 {
 	renderer.prepareDrawSprite();
-	renderer.drawSprite(*mSlider, glm::translate(glm::vec3{ mPos.x, mPos.y, 0.0f }));
+	renderer.drawSprite(*mGuiSpriteSheet->getSprite(sliderIndex()).lock(), 
+		glm::translate(glm::vec3{ mPos.x, mPos.y, 0.0f }));
 
 	auto pos = mPos + mButtonPos;
-	renderer.drawSprite(*mButton, glm::translate(glm::vec3{ pos.x, pos.y, 0.0f }));
+	renderer.drawSprite(*mGuiSpriteSheet->getSprite(buttonIndex()).lock(), 
+		glm::translate(glm::vec3{ pos.x, pos.y, 0.0f }));
 
 	renderer.prepareDrawText();
 	pos = mPos + mTextPos;
@@ -98,18 +103,18 @@ template<typename T>
 inline void Slider<T>::grabInput(const glm::mat4& orthoMatrix, Application& app)
 {
 	auto dim = app.getDimensions();
-	auto pos{ app.getMousePosition() };
-	auto normPos = glm::vec4{ 2 * pos.x / dim.x - 1.0f, 
-		2 * pos.y / dim.y - 1.0f, 0.0f, 1.0f };
+	auto pos{ app.getMouseNormalizedPosition() };
+	pos = pos * glm::inverse(orthoMatrix);
+	auto sliderBounds = mGuiSpriteSheet->getSprite(sliderIndex()).lock()->getBounds();
+	auto buttonBounds = mGuiSpriteSheet->getSprite(buttonIndex()).lock()->getBounds();
 
-	auto boundsLowerLeft = orthoMatrix * glm::vec4{ mPos + mButtonPos, 0.0f, 1.0f };
-	auto boundsUpperRight = orthoMatrix * glm::vec4{ mPos + mButtonPos + mButton->getBounds(), 
-		0.0f, 1.0f };
+	auto boundsLowerLeft = glm::vec4{ mPos + mButtonPos, 0.0f, 1.0f };
+	auto boundsUpperRight = glm::vec4{ mPos + mButtonPos + buttonBounds, 0.0f, 1.0f };
 
 	if (app.getMouseButtonState(GLFW_MOUSE_BUTTON_1))
 	{
-		if (normPos.x >= boundsLowerLeft.x && normPos.y >= boundsLowerLeft.y &&
-			normPos.x <= boundsUpperRight.x && normPos.y <= boundsUpperRight.y)
+		if (pos.x >= boundsLowerLeft.x && pos.y >= boundsLowerLeft.y &&
+			pos.x <= boundsUpperRight.x && pos.y <= boundsUpperRight.y)
 			mClicked = true;
 	}
 	else
@@ -117,10 +122,9 @@ inline void Slider<T>::grabInput(const glm::mat4& orthoMatrix, Application& app)
 
 	if (mClicked)
 	{
-		mButtonPos.x = glm::clamp((normPos * glm::inverse(orthoMatrix)).x, mPos.x, 
-			(mPos + mSlider->getBounds() - mButton->getBounds()).x);
+		mButtonPos.x = glm::clamp(pos.x, mPos.x, (mPos + sliderBounds - buttonBounds).x);
 
-		mValue = (mButtonPos.x - mPos.x) / (mSlider->getBounds().x - mButton->getBounds().x) * 
+		mValue = (mButtonPos.x - mPos.x) / (sliderBounds.x - buttonBounds.x) *
 			(mMaxValue - mMinValue) + mMinValue;
 
 		std::stringstream str;
@@ -138,4 +142,16 @@ template<typename T>
 inline const T& Slider<T>::getValue() const
 {
 	return mValue;
+}
+
+template<typename T>
+inline constexpr std::uint32_t Slider<T>::sliderIndex()
+{
+	return 0;
+}
+
+template<typename T>
+inline constexpr std::uint32_t Slider<T>::buttonIndex()
+{
+	return 1;
 }

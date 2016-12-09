@@ -5,7 +5,7 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		Application app{ "Wyspa wilków", { 800, 600 } };
+		Application app{ "Wyspa wilków", { 1024, 768 } };
 		app.run();
 	}
 	catch (std::exception &e)
