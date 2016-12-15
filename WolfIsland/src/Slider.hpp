@@ -17,16 +17,16 @@ public:
 	~Slider();
 
 	void draw(class Renderer& renderer) const override;
-
 	void grabInput(const glm::mat4& orthoMatrix, class Application& app) override;
-	void update(float deltaTime) override;
+	void update(double deltaTime) override;
 
 	const T& getValue() const;
+	void setPos(const glm::vec2& pos);
 
 
 private:
 	static constexpr std::uint32_t sliderIndex();
-	static constexpr std::uint32_t  buttonIndex();
+	static constexpr std::uint32_t buttonIndex();
 
 	glm::vec2 mPos;
 	glm::vec2 mButtonPos;
@@ -37,7 +37,8 @@ private:
 	T mMaxValue;
 
 	bool mClicked;
-
+	
+	// Resources
 	std::shared_ptr<class SpriteSheet> mGuiSpriteSheet;
 	std::shared_ptr<class Text> mText;
 };
@@ -65,13 +66,7 @@ inline void Slider<T>::create(std::shared_ptr<class SpriteSheet> guiSpriteSheet,
 	mMinValue = minValue;
 	mMaxValue = maxValue;
 	mValue = minValue;
-	mPos = pos;
-
-	auto sliderBounds = mGuiSpriteSheet->getSprite(sliderIndex()).lock()->getBounds();
-	auto buttonBounds = mGuiSpriteSheet->getSprite(buttonIndex()).lock()->getBounds();
-
-	mButtonPos = glm::vec2{ 0.0f, -(buttonBounds.y - sliderBounds.y) / 2.0f };
-	mTextPos = glm::vec2{ sliderBounds.x + 7.0f, sliderBounds.y + 3.0f };
+	setPos(pos);
 
 	std::stringstream str;
 	str << mValue;
@@ -134,7 +129,7 @@ inline void Slider<T>::grabInput(const glm::mat4& orthoMatrix, Application& app)
 }
 
 template<typename T>
-inline void Slider<T>::update(float deltaTime)
+inline void Slider<T>::update(double deltaTime)
 {
 }
 
@@ -142,6 +137,16 @@ template<typename T>
 inline const T& Slider<T>::getValue() const
 {
 	return mValue;
+}
+
+template<typename T>
+inline void Slider<T>::setPos(const glm::vec2 & pos)
+{
+	mPos = pos;
+	auto sliderBounds = mGuiSpriteSheet->getSprite(sliderIndex()).lock()->getBounds();
+	auto buttonBounds = mGuiSpriteSheet->getSprite(buttonIndex()).lock()->getBounds();
+	mButtonPos = glm::vec2{ 0.0f, -(buttonBounds.y - sliderBounds.y) / 2.0f };
+	mTextPos = glm::vec2{ sliderBounds.x + 7.0f, 30.0f };
 }
 
 template<typename T>

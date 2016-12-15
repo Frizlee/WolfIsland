@@ -23,6 +23,7 @@ public:
 private:
 	glm::vec2 mRealPos;
 
+	// Resources
 	std::shared_ptr<class Sprite> mSprite;
 };
 

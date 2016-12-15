@@ -145,7 +145,7 @@ void WolfFemale::updateMove(Board& board)
 	if (harePos != -1)
 	{
 		newPos = movePosVec.at(harePos);
-		mChaseHare == true;
+		mChaseHare = true;
 	}
 	else
 		newPos = movePosVec.at(dist(Application::randomDev));

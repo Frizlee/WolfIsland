@@ -16,11 +16,13 @@ static const string groundSpriteSheetName{ "GroundSpriteSheet.png" };
 
 
 Board::Board()
+	: mObjectCounters{ 0, 0, 0, 0, 0 }, mIsCountersChanged{ true }
 {
 }
 
 Board::Board(uint32_t width, uint32_t height, shared_ptr<SpriteSheet> spriteSheet, 
 	Renderer& renderer)
+	: mObjectCounters{ 0, 0, 0, 0, 0 }, mIsCountersChanged{ true }
 {
 	create(width, height, spriteSheet, renderer);
 }
@@ -152,6 +154,19 @@ const vector<shared_ptr<GameObject>>& Board::getObjects() const
 void Board::addGameObject(shared_ptr<GameObject>& object)
 {
 	mObjects.push_back(object);
+
+	if (object->getObjectType() == "wolf_male")
+		mObjectCounters[0]++;
+	else if (object->getObjectType() == "wolf_female")
+		mObjectCounters[1]++;
+	else if (object->getObjectType() == "hare")
+		mObjectCounters[2]++;
+	else if (object->getObjectType() == "boulder")
+		mObjectCounters[3]++;
+	else if (object->getObjectType() == "bush")
+		mObjectCounters[4]++;
+
+	mIsCountersChanged = true;
 }
 
 uint32_t Board::getWidth() const
@@ -174,12 +189,37 @@ void Board::spawnHare(glm::tvec2<int32_t> pos)
 	mHareSpawnStack.push(pos);
 }
 
+const array<int32_t, 5>& Board::getObjectCounters()
+{
+	mIsCountersChanged = false;
+	return mObjectCounters;
+}
+
+bool Board::isCountersChanged()
+{
+	return mIsCountersChanged;
+}
+
 void Board::updateTurn(Application& app)
 {
 	for (auto it{ begin(mObjects) }; it != end(mObjects);)
 	{
 		if ((*it)->isReadyToDelete())
+		{
+			if ((*it)->getObjectType() == "wolf_male")
+				mObjectCounters[0]--;
+			else if ((*it)->getObjectType() == "wolf_female")
+				mObjectCounters[1]--;
+			else if ((*it)->getObjectType() == "hare")
+				mObjectCounters[2]--;
+			else if ((*it)->getObjectType() == "boulder")
+				mObjectCounters[3]--;
+			else if ((*it)->getObjectType() == "bush")
+				mObjectCounters[4]--;
+
+			mIsCountersChanged = true;
 			it = mObjects.erase(it);
+		}
 		else
 			it++;
 	}
@@ -203,7 +243,7 @@ vector<shared_ptr<GameObject>> Board::getSurroundingObjects(const glm::tvec2<int
 
 	for (auto& obj : mObjects)
 	{
-		auto absDiff{ glm::abs(obj->getPos() - pos) };
+		auto absDiff{ glm::abs(obj->getSavedPos() - pos) };
 
 		if (obj->isActive() && (absDiff.x == 1 || absDiff.y == 1))
 			vec.push_back(obj);
@@ -212,15 +252,22 @@ vector<shared_ptr<GameObject>> Board::getSurroundingObjects(const glm::tvec2<int
 	return vec;
 }
 
-vector<shared_ptr<GameObject>> Board::getObjects(const glm::tvec2<int32_t>& pos)
+vector<shared_ptr<GameObject>> Board::getObjects(const glm::tvec2<int32_t>& pos, bool saved)
 {
 	vector<shared_ptr<GameObject>> vec;
 
-	for (auto& obj : mObjects)
-	{
-		if (obj->isActive() && obj->getPos() == pos)
-			vec.push_back(obj);
-	}
+	if (saved)
+		for (auto& obj : mObjects)
+		{
+			if (obj->isActive() && obj->getSavedPos() == pos)
+				vec.push_back(obj);
+		}
+	else
+		for (auto& obj : mObjects)
+		{
+			if (obj->isActive() && obj->getPos() == pos)
+				vec.push_back(obj);
+		}
 
 	return vec;
 }

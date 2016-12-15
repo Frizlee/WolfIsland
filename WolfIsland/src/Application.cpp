@@ -21,6 +21,8 @@ static const string boardSpriteSheetPath{ "GroundSpriteSheet.png" };
 static const string guiSpriteSheetPath{ "GuiSpriteSheet.png" };
 static const string boulderSpritePath{ "BoulderSprite.png" };
 static const string bushSpritePath{ "BushSprite.png" };
+static const string fontPath{ "TimesNewRoman.ttf" };
+static const glm::vec4 textColor{ 160 / 256.0f, 160 / 256.0f, 160 / 256.0f, 1.0f };
 const float Application::spriteSize{ 48.0f };
 random_device Application::randomDev;
 
@@ -70,7 +72,7 @@ void Application::init(const std::string& windowTitle, const glm::tvec2<int32_t>
 	gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
 
 	// Create font
-	mFnt = make_shared<Font>("ComicSans.ttf", 16, 
+	mFnt = make_shared<Font>(fontPath, 18, 
 		make_shared<ImageAtlas>(256, 256, Image::Format::R8), mRenderer);
 
 	// Create Text vbo and vao
@@ -136,9 +138,31 @@ void Application::init(const std::string& windowTitle, const glm::tvec2<int32_t>
 	mHareCountSlider.create(mGuiSpriteSheet, sliderHareCountText, 0, 50, 
 		glm::vec2{ 0.0f, -20.0f }, mRenderer);
 
+	// Info panel
+	shared_ptr<Text> wolfMaleCountText = make_shared<Text>(string{}, mFnt, mVaoText,
+		60 * TextVertexLayout::Size(), mRenderer);
+	wolfMaleCountText->setColor(textColor);
+	shared_ptr<Text> wolfFemaleCountText = make_shared<Text>(string{}, mFnt, mVaoText,
+		90 * TextVertexLayout::Size(), mRenderer);
+	wolfFemaleCountText->setColor(textColor);
+	shared_ptr<Text> hareCountText = make_shared<Text>(string{}, mFnt, mVaoText,
+		120 * TextVertexLayout::Size(), mRenderer);
+	hareCountText->setColor(textColor);
+	shared_ptr<Text> boulderCountText = make_shared<Text>(string{}, mFnt, mVaoText,
+		150 * TextVertexLayout::Size(), mRenderer);
+	boulderCountText->setColor(textColor);
+	shared_ptr<Text> bushCountText = make_shared<Text>(string{}, mFnt, mVaoText,
+		180 * TextVertexLayout::Size(), mRenderer);
+	bushCountText->setColor(textColor);
+
+	mInfoPanel.create(mGuiSpriteSheet, wolfMaleCountText, wolfFemaleCountText, hareCountText,
+		boulderCountText, bushCountText, glm::vec2{ 0.0f, 0.0f }, mRenderer);
+	auto bounds = mGuiSpriteSheet->getSprite(2).lock()->getBounds();
+	mInfoPanel.setPos(glm::vec2{ -dimensions.x / 2.0f, dimensions.y / 2.0f - bounds.y });
+
 	// Create ortho matrix
-	mOrthoMatrix = glm::ortho(-(dimensions.x / 2.0f), dimensions.x / 2.0f,
-		-(dimensions.y / 2.0f), dimensions.y / 2.0f);
+	mOrthoMatrix = glm::ortho(-dimensions.x / 2.0f, dimensions.x / 2.0f,
+		-dimensions.y / 2.0f, dimensions.y / 2.0f);
 }
 
 
@@ -251,16 +275,22 @@ void Application::grabInput()
 			if (getMouseButtonState(GLFW_MOUSE_BUTTON_1))
 			{
 				auto pos = getMouseoverSpawnPosition();
+				auto boardDim =  glm::tvec2<int32_t>(mBoard.getWidth(), mBoard.getHeight());
 
 				if (mSpawnPos != pos)
 					mObjectAlreadySpawned = false;
+				if (pos.x < 0 || pos.x >= boardDim.x ||
+					pos.y < 0 || pos.y >= boardDim.y ||
+					!mBoard.getObjects(pos, false).empty())
+					mObjectAlreadySpawned = true;
 
 				mSpawnPos = pos;
 			}
 
 			mCameraZoom += getLastScrollAction() * cameraZoomUnit;
-			std::cout << mCameraZoom << std::endl;
 			mCameraZoom = glm::clamp(mCameraZoom, 0.3f, 3.0f);
+
+			mInfoPanel.grabInput(mOrthoMatrix, *this);
 			break;
 		}
 	}
@@ -270,6 +300,15 @@ void Application::calculateLogic(double deltaTime)
 {
 	switch (mState)
 	{
+	case State::MENU:
+		{
+			mWidthSlider.update(deltaTime);
+			mHeightSlider.update(deltaTime);
+			mWolfCountSlider.update(deltaTime);
+			mHareCountSlider.update(deltaTime);
+			break;
+		}
+
 	case State::SIMULATION:
 		{
 			mCameraMoveDir = mCameraMoveDir == glm::vec2{ 0.0f, 0.0f } ? glm::vec2{ 0.0f, 0.0f } :
@@ -344,6 +383,11 @@ void Application::calculateLogic(double deltaTime)
 				mObjectAlreadySpawned = true;
 			}
 
+			mInfoPanel.update(deltaTime);
+
+			if (mBoard.isCountersChanged())
+				mInfoPanel.updateCounters(mBoard.getObjectCounters(), mRenderer);
+
 			break;
 		}
 	}
@@ -395,10 +439,7 @@ void Application::renderScene()
 
 			// Render user interface
 			mRenderer.bindOrthoMatrix(mOrthoMatrix);
-			auto dim = getDimensions();
-			mRenderer.prepareDrawSprite();
-			mRenderer.drawSprite(*mGuiSpriteSheet->getSprite(2).lock(),
-				glm::translate(glm::vec3{ -dim.x / 2, 0.0f, 0.0f }));
+			mInfoPanel.draw(mRenderer);
 			break;
 		}
 	}

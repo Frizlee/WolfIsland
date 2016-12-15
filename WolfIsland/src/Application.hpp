@@ -19,6 +19,7 @@
 #include <glm/gtx/transform.hpp>
 #include "Board.hpp"
 #include "Slider.hpp"
+#include "InformationPanel.hpp"
 
 
 class ApplicationInitException : public std::exception 
@@ -107,6 +108,7 @@ private:
 	Slider<std::int32_t> mHeightSlider;
 	Slider<std::int32_t> mWolfCountSlider;
 	Slider<std::int32_t> mHareCountSlider;
+	InformationPanel mInfoPanel;
 	
 	// Gpu resources
 	std::shared_ptr<VertexArray> mVaoText;

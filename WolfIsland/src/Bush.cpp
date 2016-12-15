@@ -59,5 +59,7 @@ void Bush::update(float deltaTime)
 void Bush::setPos(const glm::tvec2<int32_t>& pos)
 {
 	mPos = pos;
+	mSavedPos = pos;
 	mRealPos = glm::vec2{ pos.x * Application::spriteSize, pos.y * Application::spriteSize };
+	mActive = true;
 }

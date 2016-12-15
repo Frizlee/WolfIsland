@@ -11,7 +11,7 @@ public:
 
 	virtual void draw(class Renderer& renderer) const = 0;
 	virtual void grabInput(const glm::mat4& orthoMatrix, class Application& app) = 0;
-	virtual void update(float deltaTime) = 0;
+	virtual void update(double deltaTime) = 0;
 
 protected:
 };

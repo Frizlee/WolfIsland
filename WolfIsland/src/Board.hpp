@@ -21,7 +21,8 @@ public:
 	void draw(class Renderer& renderer);
 
 	const std::vector<std::shared_ptr<class GameObject>>& getObjects() const;
-	std::vector<std::shared_ptr<class GameObject>> getObjects(const glm::tvec2<std::int32_t>& pos);
+	std::vector<std::shared_ptr<class GameObject>> getObjects(const glm::tvec2<std::int32_t>& pos, 
+		bool saved = true);
 	std::vector<std::shared_ptr<class GameObject>> getSurroundingObjects(
 		const glm::tvec2<std::int32_t>& pos);
 	void addGameObject(std::shared_ptr<class GameObject>& object);
@@ -30,6 +31,9 @@ public:
 
 	void spawnWolf(glm::tvec2<std::int32_t> pos);
 	void spawnHare(glm::tvec2<std::int32_t> pos);
+
+	const std::array<std::int32_t, 5>& getObjectCounters();
+	bool isCountersChanged();
 
 	void updateTurn(class Application& app);
 
@@ -41,6 +45,10 @@ private:
 	std::stack<glm::tvec2<std::int32_t>> mHareSpawnStack;
 	std::stack<glm::tvec2<std::int32_t>> mWolfSpawnStack;
 
+	std::array<std::int32_t, 5> mObjectCounters;
+	bool mIsCountersChanged;
+
+	// Resources
 	std::vector<std::shared_ptr<VertexBuffer<PositionVertexLayout>>> mTileMap;
 	std::shared_ptr<SpriteSheet> mSpriteSheet;
 };
