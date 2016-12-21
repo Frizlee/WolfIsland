@@ -129,7 +129,7 @@
     <ClCompile Include="src\Codec.cpp" />
     <ClCompile Include="src\FlipbookAnimation.cpp" />
     <ClCompile Include="src\InformationPanel.cpp" />
-    <ClCompile Include="src\MenuPanel .cpp" />
+    <ClCompile Include="src\MenuPanel.cpp" />
     <ClCompile Include="src\SpriteSheet.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\GameObject.cpp" />

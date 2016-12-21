@@ -117,7 +117,7 @@
     <ClCompile Include="src\InformationPanel.cpp">
       <Filter>Source Files\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\MenuPanel .cpp">
+    <ClCompile Include="src\MenuPanel.cpp">
       <Filter>Source Files\Gui</Filter>
     </ClCompile>
     <ClCompile Include="src\Slider.cpp">
