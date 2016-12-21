@@ -4,6 +4,7 @@
 #include "Hare.hpp"
 #include "Boulder.hpp"
 #include "Bush.hpp"
+#include <glm/gtx/transform.hpp>
 using namespace std;
 
 static const int openglVersionMajor{ 3 };
@@ -29,7 +30,7 @@ random_device Application::randomDev;
 Application::Application()
 	: mWnd{ nullptr }, mIsGlfw{ false }, mTourTimer{ 0.0f }, mCameraMoveMultiplier{ 1.0f },
 	mState{ State::MENU }, mColorChange{ 0.0f }, mObjectAlreadySpawned{ false },
-	mSpawnObjectTypeKey{ 'n' }
+	mSpawnObjectTypeKey{ 'n' }, mMouseLastState{ false }
 {
 }
 
@@ -37,7 +38,7 @@ Application::Application(const std::string& windowTitle, const glm::tvec2<int32_
 	bool fullscreen)
 	: mWnd{ nullptr }, mIsGlfw{ false }, mTourTimer{ 0.0f }, mCameraMoveMultiplier{ 1.0f },
 	mState{ State::MENU }, mColorChange{ 0.0f }, mObjectAlreadySpawned{ false }, 
-	mSpawnObjectTypeKey{ 'n' }
+	mSpawnObjectTypeKey{ 'n' }, mMouseLastState{ false }
 {
 	init(windowTitle, dimensions, fullscreen);
 }
@@ -121,23 +122,38 @@ void Application::init(const std::string& windowTitle, const glm::tvec2<int32_t>
 	}
 
 	// Sliders
-	shared_ptr<Text> sliderWidthText = make_shared<Text>(string{}, mFnt, mVaoText, 0, mRenderer);
-	shared_ptr<Text> sliderHeightText = make_shared<Text>(string{}, mFnt, mVaoText, 
+	shared_ptr<Text> widthSliderText = make_shared<Text>(string{}, mFnt, mVaoText, 0, mRenderer);
+	widthSliderText->setColor(textColor);
+	shared_ptr<Text> heightSliderText = make_shared<Text>(string{}, mFnt, mVaoText, 
 		18 * TextVertexLayout::Size(), mRenderer);
-	shared_ptr<Text> sliderWolfCountText = make_shared<Text>(string{}, mFnt, mVaoText, 
+	heightSliderText->setColor(textColor);
+	shared_ptr<Text> wolfSliderText = make_shared<Text>(string{}, mFnt, mVaoText, 
 		36 * TextVertexLayout::Size(), mRenderer);
-	shared_ptr<Text> sliderHareCountText = make_shared<Text>(string{}, mFnt, mVaoText, 
+	wolfSliderText->setColor(textColor);
+	shared_ptr<Text> hareSliderText = make_shared<Text>(string{}, mFnt, mVaoText, 
 		48 * TextVertexLayout::Size(), mRenderer);
+	hareSliderText->setColor(textColor);
 
-	mWidthSlider.create(mGuiSpriteSheet, sliderWidthText, 2, 200, 
-		glm::vec2{ 0.0f, 40.0f }, mRenderer);
-	mHeightSlider.create(mGuiSpriteSheet, sliderHeightText, 2, 200, 
-		glm::vec2{ 0.0f, 20.0f }, mRenderer);
-	mWolfCountSlider.create(mGuiSpriteSheet, sliderWolfCountText, 0, 50, 
-		glm::vec2{ 0.0f, 0.0f }, mRenderer);
-	mHareCountSlider.create(mGuiSpriteSheet, sliderHareCountText, 0, 50, 
-		glm::vec2{ 0.0f, -20.0f }, mRenderer);
+	mMenuPanel.create(mGuiSpriteSheet, heightSliderText, widthSliderText, wolfSliderText, 
+		hareSliderText, glm::vec2{}, mRenderer);
+	
+	// Start button
+	mStartButton.create(mGuiSpriteSheet, 4, 5, glm::vec2{}, mRenderer);
 
+	// Spawn buttons
+	mNoneButton.create(mGuiSpriteSheet, 6, 7, glm::vec2{}, mRenderer);
+	mNoneButton.setAutoUnpress(false);
+	mWolfButton.create(mGuiSpriteSheet, 8, 9, glm::vec2{}, mRenderer);
+	mWolfButton.setAutoUnpress(false);
+	mHareButton.create(mGuiSpriteSheet, 10, 11, glm::vec2{}, mRenderer);
+	mHareButton.setAutoUnpress(false);
+	mBoulderButton.create(mGuiSpriteSheet, 12, 13, glm::vec2{}, mRenderer);
+	mBoulderButton.setAutoUnpress(false);
+	mBushButton.create(mGuiSpriteSheet, 14, 15, glm::vec2{}, mRenderer);
+	mBushButton.setAutoUnpress(false);
+
+	mNoneButton.setPress(true);
+	
 	// Info panel
 	shared_ptr<Text> wolfMaleCountText = make_shared<Text>(string{}, mFnt, mVaoText,
 		60 * TextVertexLayout::Size(), mRenderer);
@@ -156,9 +172,9 @@ void Application::init(const std::string& windowTitle, const glm::tvec2<int32_t>
 	bushCountText->setColor(textColor);
 
 	mInfoPanel.create(mGuiSpriteSheet, wolfMaleCountText, wolfFemaleCountText, hareCountText,
-		boulderCountText, bushCountText, glm::vec2{ 0.0f, 0.0f }, mRenderer);
-	auto bounds = mGuiSpriteSheet->getSprite(2).lock()->getBounds();
-	mInfoPanel.setPos(glm::vec2{ -dimensions.x / 2.0f, dimensions.y / 2.0f - bounds.y });
+		boulderCountText, bushCountText, glm::vec2{}, mRenderer);
+	
+	resetGuiPosition();
 
 	// Create ortho matrix
 	mOrthoMatrix = glm::ortho(-dimensions.x / 2.0f, dimensions.x / 2.0f,
@@ -216,16 +232,18 @@ void Application::grabInput()
 	{
 	case State::MENU:
 		{
-			mWidthSlider.grabInput(mOrthoMatrix, *this);
-			mHeightSlider.grabInput(mOrthoMatrix, *this);
-			mWolfCountSlider.grabInput(mOrthoMatrix, *this);
-			mHareCountSlider.grabInput(mOrthoMatrix, *this);
-
 			if (getKeyState(GLFW_KEY_ENTER))
+				mStartButton.setPress(true);
+
+			if (mStartButton.isPressed())
 			{
 				setupBoard();
 				mState = State::SIMULATION;
 			}
+
+			mMenuPanel.grabInput(mOrthoMatrix, *this);
+			mStartButton.grabInput(mOrthoMatrix, *this);	
+
 			break;
 		}
 
@@ -256,22 +274,72 @@ void Application::grabInput()
 
 			if (getKeyState(GLFW_KEY_4))
 				mCameraMoveMultiplier = 4.0f;
-
-			if (getKeyState(GLFW_KEY_B))
-				mSpawnObjectTypeKey = 'b'; // boulder
-
-			if (getKeyState(GLFW_KEY_G))
-				mSpawnObjectTypeKey = 'g'; // bush
-
-			if (getKeyState(GLFW_KEY_V))
-				mSpawnObjectTypeKey = 'v'; // wolf
-
-			if (getKeyState(GLFW_KEY_H))
-				mSpawnObjectTypeKey = 'h'; // hare
-
-			if (getKeyState(GLFW_KEY_N))
-				mSpawnObjectTypeKey = 'n'; // no object
 			
+			mNoneButton.grabInput(mOrthoMatrix, *this);
+
+			if (mNoneButton.isPressed() || getKeyState(GLFW_KEY_N))
+			{
+				mNoneButton.setPress(true);
+				mWolfButton.setPress(false);
+				mHareButton.setPress(false);
+				mBoulderButton.setPress(false);
+				mBushButton.setPress(false);
+
+				mSpawnObjectTypeKey = 'n'; // no object
+			}
+
+			mWolfButton.grabInput(mOrthoMatrix, *this);
+
+			if (mWolfButton.isPressed() || getKeyState(GLFW_KEY_V))
+			{
+				mNoneButton.setPress(false);
+				mWolfButton.setPress(true);
+				mHareButton.setPress(false);
+				mBoulderButton.setPress(false);
+				mBushButton.setPress(false);
+
+				mSpawnObjectTypeKey = 'v'; // wolf
+			}
+
+			mHareButton.grabInput(mOrthoMatrix, *this);
+
+			if (mHareButton.isPressed() || getKeyState(GLFW_KEY_H))
+			{
+				mNoneButton.setPress(false);
+				mWolfButton.setPress(false);
+				mHareButton.setPress(true);
+				mBoulderButton.setPress(false);
+				mBushButton.setPress(false);
+
+				mSpawnObjectTypeKey = 'h'; // hare
+			}
+
+			mBoulderButton.grabInput(mOrthoMatrix, *this);
+
+			if (mBoulderButton.isPressed() || getKeyState(GLFW_KEY_B))
+			{
+				mNoneButton.setPress(false);
+				mWolfButton.setPress(false);
+				mHareButton.setPress(false);
+				mBoulderButton.setPress(true);
+				mBushButton.setPress(false);
+
+				mSpawnObjectTypeKey = 'b'; // boulder
+			}
+
+			mBushButton.grabInput(mOrthoMatrix, *this);
+
+			if (mBushButton.isPressed() || getKeyState(GLFW_KEY_G))
+			{
+				mNoneButton.setPress(false);
+				mWolfButton.setPress(false);
+				mHareButton.setPress(false);
+				mBoulderButton.setPress(false);
+				mBushButton.setPress(true);
+
+				mSpawnObjectTypeKey = 'g'; // bush
+			}
+
 			if (getMouseButtonState(GLFW_MOUSE_BUTTON_1))
 			{
 				auto pos = getMouseoverSpawnPosition();
@@ -291,6 +359,7 @@ void Application::grabInput()
 			mCameraZoom = glm::clamp(mCameraZoom, 0.3f, 3.0f);
 
 			mInfoPanel.grabInput(mOrthoMatrix, *this);
+
 			break;
 		}
 	}
@@ -302,10 +371,8 @@ void Application::calculateLogic(double deltaTime)
 	{
 	case State::MENU:
 		{
-			mWidthSlider.update(deltaTime);
-			mHeightSlider.update(deltaTime);
-			mWolfCountSlider.update(deltaTime);
-			mHareCountSlider.update(deltaTime);
+			mMenuPanel.update(deltaTime);
+			mStartButton.update(deltaTime);
 			break;
 		}
 
@@ -384,6 +451,11 @@ void Application::calculateLogic(double deltaTime)
 			}
 
 			mInfoPanel.update(deltaTime);
+			mNoneButton.update(deltaTime);
+			mWolfButton.update(deltaTime);
+			mHareButton.update(deltaTime);
+			mBoulderButton.update(deltaTime);
+			mBushButton.update(deltaTime);
 
 			if (mBoard.isCountersChanged())
 				mInfoPanel.updateCounters(mBoard.getObjectCounters(), mRenderer);
@@ -420,10 +492,9 @@ void Application::renderScene()
 		{
 			// Render menu interface 
 			mRenderer.bindOrthoMatrix(mOrthoMatrix);
-			mWidthSlider.draw(mRenderer);
-			mHeightSlider.draw(mRenderer);
-			mWolfCountSlider.draw(mRenderer);
-			mHareCountSlider.draw(mRenderer);
+			
+			mMenuPanel.draw(mRenderer);
+			mStartButton.draw(mRenderer);
 			break;
 		}
 
@@ -440,6 +511,11 @@ void Application::renderScene()
 			// Render user interface
 			mRenderer.bindOrthoMatrix(mOrthoMatrix);
 			mInfoPanel.draw(mRenderer);
+			mNoneButton.draw(mRenderer);
+			mWolfButton.draw(mRenderer);
+			mHareButton.draw(mRenderer);
+			mBoulderButton.draw(mRenderer);
+			mBushButton.draw(mRenderer);
 			break;
 		}
 	}
@@ -460,6 +536,34 @@ glm::tvec2<int32_t> Application::getDimensions()
 	return glm::tvec2<int32_t>{ width, height };
 }
 
+void Application::resetGuiPosition()
+{
+	auto dimensions = getDimensions();
+
+	auto menuPanelBounds = mGuiSpriteSheet->getSprite(3).lock()->getBounds();
+	mMenuPanel.setPos(glm::vec2{ -menuPanelBounds.x / 2.0f, -menuPanelBounds.y / 2.0f });
+	
+	auto startButtonBounds = mGuiSpriteSheet->getSprite(4).lock()->getBounds();
+	mStartButton.setPos(glm::vec2{ -startButtonBounds.x / 2.0f, 
+		-menuPanelBounds.y / 2.0f - startButtonBounds.y - 30.0f });
+	
+	auto infoPanelBounds = mGuiSpriteSheet->getSprite(2).lock()->getBounds();
+	mInfoPanel.setPos(glm::vec2{ -dimensions.x / 2.0f, dimensions.y / 2.0f - infoPanelBounds.y });
+
+	// Spawn buttons
+	auto spawnButtonsBounds = mGuiSpriteSheet->getSprite(6).lock()->getBounds();
+	glm::vec2 startPos{ -5.0f * spawnButtonsBounds.x / 2.0f, -dimensions.y / 2.0f };
+	mNoneButton.setPos(startPos);
+	startPos += glm::vec2{ spawnButtonsBounds.x, 0.0f };
+	mWolfButton.setPos(startPos);
+	startPos += glm::vec2{ spawnButtonsBounds.x, 0.0f };
+	mHareButton.setPos(startPos);
+	startPos += glm::vec2{ spawnButtonsBounds.x, 0.0f };
+	mBoulderButton.setPos(startPos);
+	startPos += glm::vec2{ spawnButtonsBounds.x, 0.0f };
+	mBushButton.setPos(startPos);
+}
+
 int32_t Application::getLastScrollAction()
 {
 	int32_t lastScroll = mVerticalScroll;
@@ -472,9 +576,19 @@ bool Application::getKeyState(int keyCode)
 	return glfwGetKey(mWnd, keyCode) == GLFW_PRESS;
 }
 
-bool Application::getMouseButtonState(int keyCode)
+bool Application::getMouseButtonState(int keyCode, bool clickedThisFrame)
 {
-	return glfwGetMouseButton(mWnd, keyCode) == GLFW_PRESS;
+	if (clickedThisFrame)
+	{
+		auto thisState = glfwGetMouseButton(mWnd, keyCode) == GLFW_PRESS;
+
+		if (thisState && !mMouseLastState[keyCode])
+			return true;
+	}
+	else 
+		return glfwGetMouseButton(mWnd, keyCode) == GLFW_PRESS;
+
+	return false;
 }
 
 glm::vec2 Application::getMousePosition()
@@ -542,7 +656,7 @@ void Application::GlfwScrollCallback(GLFWwindow* window, double xoffset, double 
 	app->mVerticalScroll = static_cast<int32_t>(yoffset);
 }
 
-void Application::GlfwFramebufferSizeCallback(GLFWwindow * window, int width, int height)
+void Application::GlfwFramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
 	Application* app{ static_cast<Application*>(glfwGetWindowUserPointer(window)) };
 
@@ -550,6 +664,7 @@ void Application::GlfwFramebufferSizeCallback(GLFWwindow * window, int width, in
 	app->mRenderer.setViewport(glm::tvec2<int32_t>{ width, height });
 	app->mOrthoMatrix = glm::ortho(-(width / 2.0f), width / 2.0f,
 			-(height / 2.0f), height / 2.0f);
+	app->resetGuiPosition();
 }
 
 glm::tvec2<int32_t> Application::getMouseoverSpawnPosition()
@@ -563,24 +678,22 @@ glm::tvec2<int32_t> Application::getMouseoverSpawnPosition()
 
 void Application::setupBoard()
 {
-	auto boardWidth = mWidthSlider.getValue();
-	auto boardHeight = mHeightSlider.getValue();
-	auto wolfCount = mWolfCountSlider.getValue();
-	auto hareCount = mHareCountSlider.getValue();
+	// 0 - height, 1 - width, 2 - wolfCount, 3 - hareCount
+	auto values = mMenuPanel.getValues();
 
 	// Board dimensions
-	mBoard.create(boardWidth, boardHeight, mBoardSpriteSheet, mRenderer);
-	mCameraPos = glm::vec2{ -(boardWidth * spriteSize / 2.0f), -(boardHeight * spriteSize / 2.0f) };
+	mBoard.create(values[1], values[0], mBoardSpriteSheet, mRenderer);
+	mCameraPos = glm::vec2{ -(values[1] * spriteSize / 2.0f), -(values[0] * spriteSize / 2.0f) };
 	mCameraZoom = 1.0f;
 
 	// Spawn wolfs and hares
-	uniform_int_distribution<int32_t> distWidth{ 0, static_cast<int32_t>(boardWidth) - 1 };
-	uniform_int_distribution<int32_t> distHeight{ 0, static_cast<int32_t>(boardHeight) - 1 };
+	uniform_int_distribution<int32_t> distWidth{ 0, static_cast<int32_t>(values[1]) - 1 };
+	uniform_int_distribution<int32_t> distHeight{ 0, static_cast<int32_t>(values[0]) - 1 };
 
-	for (int i = 0; i < wolfCount; i++)
+	for (int i = 0; i < values[2]; i++)
 		spawnWolf({ distWidth(randomDev), distHeight(randomDev) });
 
-	for (int i = 0; i < hareCount; i++)
+	for (int i = 0; i < values[3]; i++)
 		spawnHare({ distWidth(randomDev), distHeight(randomDev) });
 }
 
@@ -1063,8 +1176,8 @@ void Application::setupGuiSpriteSheet()
 	// Don't change it
 
 	// Slider
-	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 208.0f, 15.0f },
-		glm::vec2{ 0.0f / w, 0.0f / h }, glm::vec2{ 208.0f / w, 15.0f / h },
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 176.0f, 15.0f },
+		glm::vec2{ 0.0f / w, 0.0f / h }, glm::vec2{ 176.0f / w, 15.0f / h },
 		1.0f, spriteTex, mVaoSprite, mRenderer));
 
 	// Slider button
@@ -1075,6 +1188,71 @@ void Application::setupGuiSpriteSheet()
 	// Object list panel
 	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 320.0f, 179.0f },
 		glm::vec2{ 0.0f / w, 48.0f / h }, glm::vec2{ 320.0f / w, 227.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+	// Menu panel
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 319.0f, 310.0f },
+		glm::vec2{ 0.0f / w, 229.0f / h }, glm::vec2{ 319.0f / w, 539.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+
+	// Start button 
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 0.0f / w, 539.0f / h }, glm::vec2{ 84.0f / w, 623.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 84.0f / w, 539.0f / h }, glm::vec2{ 168.0f / w, 623.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+
+	// None button 
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 0.0f / w, 623.0f / h }, glm::vec2{ 84.0f / w, 707.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 84.0f / w, 623.0f / h }, glm::vec2{ 168.0f / w, 707.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+
+	// Wolf button 
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 0.0f / w, 707.0f / h }, glm::vec2{ 84.0f / w, 791.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 84.0f / w, 707.0f / h }, glm::vec2{ 168.0f / w, 791.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+
+	// Hare button 
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 0.0f / w, 791.0f / h }, glm::vec2{ 84.0f / w, 875.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 84.0f / w, 791.0f / h }, glm::vec2{ 168.0f / w, 875.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+
+	// Boulder button 
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 0.0f / w, 875.0f / h }, glm::vec2{ 84.0f / w, 959.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 84.0f / w, 875.0f / h }, glm::vec2{ 168.0f / w, 959.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+
+	// Bush button 
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 168.0f / w, 539.0f / h }, glm::vec2{ 252.0f / w, 623.0f / h },
+		1.0f, spriteTex, mVaoSprite, mRenderer));
+
+	mGuiSpriteSheet->addSprite(make_shared<Sprite>(glm::vec2{ 84.0f, 84.0f },
+		glm::vec2{ 252.0f / w, 539.0f / h }, glm::vec2{ 336.0f / w, 623.0f / h },
 		1.0f, spriteTex, mVaoSprite, mRenderer));
 }
 

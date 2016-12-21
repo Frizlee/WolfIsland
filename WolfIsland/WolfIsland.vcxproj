@@ -104,6 +104,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype263.lib;libpng16.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -124,9 +125,11 @@
     <ClCompile Include="src\Board.cpp" />
     <ClCompile Include="src\Boulder.cpp" />
     <ClCompile Include="src\Bush.cpp" />
+    <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Codec.cpp" />
     <ClCompile Include="src\FlipbookAnimation.cpp" />
     <ClCompile Include="src\InformationPanel.cpp" />
+    <ClCompile Include="src\MenuPanel .cpp" />
     <ClCompile Include="src\SpriteSheet.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
@@ -157,9 +160,11 @@
     <ClInclude Include="src\Board.hpp" />
     <ClInclude Include="src\Boulder.hpp" />
     <ClInclude Include="src\Bush.hpp" />
+    <ClInclude Include="src\Button.hpp" />
     <ClInclude Include="src\Codec.hpp" />
     <ClInclude Include="src\FlipbookAnimation.hpp" />
     <ClInclude Include="src\InformationPanel.hpp" />
+    <ClInclude Include="src\MenuPanel.hpp" />
     <ClInclude Include="src\SpriteSheet.hpp" />
     <ClInclude Include="src\Font.hpp" />
     <ClInclude Include="src\GameObject.hpp" />

@@ -1,7 +1,12 @@
 #include "Application.hpp"
 #include <iostream>
 
+#ifdef _DEBUG
 int main(int argc, char** argv)
+#else
+#include <Windows.h>
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+#endif
 {
 	try
 	{

@@ -19,6 +19,12 @@
     <Filter Include="Source Files\RenderSystem">
       <UniqueIdentifier>{26601ae9-5662-4d3f-80a0-493d638339a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Gui">
+      <UniqueIdentifier>{4fec24e0-b0b1-4fc8-a7d5-1f1ef07d79a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gui">
+      <UniqueIdentifier>{1bed8a60-018e-4d23-b7ea-443a798f1955}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -93,12 +99,6 @@
     <ClCompile Include="src\WolfFemale.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GuiObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Slider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SpriteSheet.cpp">
       <Filter>Source Files\RenderSystem</Filter>
     </ClCompile>
@@ -111,8 +111,20 @@
     <ClCompile Include="src\Bush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GuiObject.cpp">
+      <Filter>Source Files\Gui</Filter>
+    </ClCompile>
     <ClCompile Include="src\InformationPanel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuPanel .cpp">
+      <Filter>Source Files\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Slider.cpp">
+      <Filter>Source Files\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Button.cpp">
+      <Filter>Source Files\Gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,12 +200,6 @@
     <ClInclude Include="src\WolfFemale.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GuiObject.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Slider.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\SpriteSheet.hpp">
       <Filter>Header Files\RenderSystem</Filter>
     </ClInclude>
@@ -206,8 +212,20 @@
     <ClInclude Include="src\Bush.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\GuiObject.hpp">
+      <Filter>Header Files\Gui</Filter>
+    </ClInclude>
     <ClInclude Include="src\InformationPanel.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MenuPanel.hpp">
+      <Filter>Header Files\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Slider.hpp">
+      <Filter>Header Files\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Button.hpp">
+      <Filter>Header Files\Gui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

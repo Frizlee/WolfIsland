@@ -1,6 +1,7 @@
 #pragma once
 #include "Prerequisites.hpp"
 #include "GuiObject.hpp"
+#include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 
 template <typename T>
@@ -53,7 +54,7 @@ inline Slider<T>::Slider(std::shared_ptr<class SpriteSheet> guiSpriteSheet,
 	std::shared_ptr<class Text> text, const T& minValue, const T& maxValue, const glm::vec2& pos, 
 	class Renderer& renderer)
 {
-	create(guiSpriteSheet, minValue, maxValue, pos);
+	create(guiSpriteSheet, text, minValue, maxValue, pos, renderer);
 }
 
 template<typename T>
@@ -98,13 +99,12 @@ template<typename T>
 inline void Slider<T>::grabInput(const glm::mat4& orthoMatrix, Application& app)
 {
 	auto dim = app.getDimensions();
-	auto pos{ app.getMouseNormalizedPosition() };
-	pos = pos * glm::inverse(orthoMatrix);
+	auto pos{ app.getMouseNormalizedPosition() * glm::inverse(orthoMatrix) };
 	auto sliderBounds = mGuiSpriteSheet->getSprite(sliderIndex()).lock()->getBounds();
 	auto buttonBounds = mGuiSpriteSheet->getSprite(buttonIndex()).lock()->getBounds();
 
-	auto boundsLowerLeft = glm::vec4{ mPos + mButtonPos, 0.0f, 1.0f };
-	auto boundsUpperRight = glm::vec4{ mPos + mButtonPos + buttonBounds, 0.0f, 1.0f };
+	auto boundsLowerLeft = mPos + mButtonPos;
+	auto boundsUpperRight = mPos + mButtonPos + buttonBounds;
 
 	if (app.getMouseButtonState(GLFW_MOUSE_BUTTON_1))
 	{
@@ -117,9 +117,9 @@ inline void Slider<T>::grabInput(const glm::mat4& orthoMatrix, Application& app)
 
 	if (mClicked)
 	{
-		mButtonPos.x = glm::clamp(pos.x, mPos.x, (mPos + sliderBounds - buttonBounds).x);
+		mButtonPos.x = glm::clamp(pos.x - mPos.x, 0.0f, (sliderBounds - buttonBounds).x);
 
-		mValue = (mButtonPos.x - mPos.x) / (sliderBounds.x - buttonBounds.x) *
+		mValue = mButtonPos.x / (sliderBounds.x - buttonBounds.x) *
 			(mMaxValue - mMinValue) + mMinValue;
 
 		std::stringstream str;

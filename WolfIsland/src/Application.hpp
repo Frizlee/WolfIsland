@@ -18,8 +18,9 @@
 #include <glm/vec2.hpp>
 #include <glm/gtx/transform.hpp>
 #include "Board.hpp"
-#include "Slider.hpp"
 #include "InformationPanel.hpp"
+#include "MenuPanel.hpp"
+#include "Button.hpp"
 
 
 class ApplicationInitException : public std::exception 
@@ -66,9 +67,11 @@ public:
 
 	glm::tvec2<std::int32_t> getDimensions();
 
+	void resetGuiPosition();
+
 	std::int32_t getLastScrollAction();
 	bool getKeyState(int keyCode);
-	bool getMouseButtonState(int keyCode);
+	bool getMouseButtonState(int keyCode, bool clickedThisFrame = false);
 	glm::vec2 getMousePosition();
 	glm::vec4 getMouseNormalizedPosition();
 
@@ -104,11 +107,14 @@ private:
 	Board mBoard;
 
 	// Menu controls
-	Slider<std::int32_t> mWidthSlider;
-	Slider<std::int32_t> mHeightSlider;
-	Slider<std::int32_t> mWolfCountSlider;
-	Slider<std::int32_t> mHareCountSlider;
+	MenuPanel mMenuPanel;
 	InformationPanel mInfoPanel;
+	Button mStartButton;
+	Button mNoneButton;
+	Button mWolfButton;
+	Button mHareButton;
+	Button mBoulderButton;
+	Button mBushButton;
 	
 	// Gpu resources
 	std::shared_ptr<VertexArray> mVaoText;
@@ -117,7 +123,10 @@ private:
 
 	glm::mat4 mOrthoMatrix;
 	glm::mat4 mCameraMatrix;
+
+	// Input related
 	std::int32_t mVerticalScroll;
+	std::array<bool, 8> mMouseLastState;
 	glm::vec2 mCameraPos;
 	glm::vec2 mCameraMoveDir;
 	float mCameraMoveMultiplier;
