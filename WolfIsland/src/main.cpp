@@ -1,6 +1,7 @@
 #include "Application.hpp"
 #include <iostream>
 
+
 #ifdef _DEBUG
 int main(int argc, char** argv)
 #else

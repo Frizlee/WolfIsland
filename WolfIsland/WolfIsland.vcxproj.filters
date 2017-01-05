@@ -39,9 +39,6 @@
     <ClCompile Include="src\Font.cpp">
       <Filter>Source Files\RenderSystem</Filter>
     </ClCompile>
-    <ClCompile Include="src\gl_core_3_3.cpp">
-      <Filter>Source Files\RenderSystem</Filter>
-    </ClCompile>
     <ClCompile Include="src\Image.cpp">
       <Filter>Source Files\RenderSystem</Filter>
     </ClCompile>
@@ -126,6 +123,9 @@
     <ClCompile Include="src\Button.cpp">
       <Filter>Source Files\Gui</Filter>
     </ClCompile>
+    <ClCompile Include="src\gl_core_3_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp">
@@ -138,9 +138,6 @@
       <Filter>Header Files\RenderSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\Font.hpp">
-      <Filter>Header Files\RenderSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gl_core_3_3.hpp">
       <Filter>Header Files\RenderSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\Image.hpp">
@@ -226,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="src\Button.hpp">
       <Filter>Header Files\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gl_core_3_3.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

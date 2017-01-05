@@ -1,3 +1,8 @@
+///-------------------------------------------------------------------------------------------------
+// file:	src\Slider.hpp
+//
+// summary:	
+///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "GuiObject.hpp"
@@ -5,42 +10,124 @@
 #include <glm/vec2.hpp>
 
 template <typename T>
+/// <summary>	A slider. </summary>
 class Slider : public GuiObject
 {
 public:
+	/// <summary>	Default constructor. </summary>
 	Slider();
 
-	Slider(std::shared_ptr<class SpriteSheet> guiSpriteSheet, std::shared_ptr<class Text> text, 
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Constructor. </summary>
+	///
+	/// <param name="guiSpriteSheet">	The graphical user interface sprite sheet. </param>
+	/// <param name="text">			 	The text. </param>
+	/// <param name="minValue">		 	The minimum value. </param>
+	/// <param name="maxValue">		 	The maximum value. </param>
+	/// <param name="pos">			 	The position. </param>
+	/// <param name="renderer">		 	[in,out] The renderer. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
+	Slider(std::shared_ptr<class SpriteSheet> guiSpriteSheet, std::shared_ptr<class Text> text,
 		const T& minValue, const T& maxValue, const glm::vec2& pos, class Renderer& renderer);
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Creates this object. </summary>
+	///
+	/// <param name="guiSpriteSheet">	The graphical user interface sprite sheet. </param>
+	/// <param name="text">			 	The text. </param>
+	/// <param name="minValue">		 	The minimum value. </param>
+	/// <param name="maxValue">		 	The maximum value. </param>
+	/// <param name="pos">			 	The position. </param>
+	/// <param name="renderer">		 	[in,out] The renderer. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	void create(std::shared_ptr<class SpriteSheet> guiSpriteSheet, std::shared_ptr<class Text> text,
 		const T& minValue, const T& maxValue, const glm::vec2& pos, class Renderer& renderer);
 
+	/// <summary>	Destructor. </summary>
 	~Slider();
 
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Draws the given renderer. </summary>
+	///
+	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	void draw(class Renderer& renderer) const override;
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Grab input. </summary>
+	///
+	/// <param name="orthoMatrix">	The ortho matrix. </param>
+	/// <param name="app">		  	[in,out] The application. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	void grabInput(const glm::mat4& orthoMatrix, class Application& app) override;
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Updates the given deltaTime. </summary>
+	///
+	/// <param name="deltaTime">	The delta time. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	void update(double deltaTime) override;
 
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Gets the value. </summary>
+	///
+	/// <returns>	The value. </returns>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	const T& getValue() const;
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Sets a position. </summary>
+	///
+	/// <param name="pos">	The position. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	void setPos(const glm::vec2& pos);
 
 
 private:
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Slider index. </summary>
+	///
+	/// <returns>	A std::uint32_t. </returns>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	static constexpr std::uint32_t sliderIndex();
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Button index. </summary>
+	///
+	/// <returns>	A std::uint32_t. </returns>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	static constexpr std::uint32_t buttonIndex();
 
+	/// <summary>	The position. </summary>
 	glm::vec2 mPos;
+	/// <summary>	The button position. </summary>
 	glm::vec2 mButtonPos;
+	/// <summary>	The text position. </summary>
 	glm::vec2 mTextPos;
 
+	/// <summary>	The value. </summary>
 	T mValue;
+	/// <summary>	The minimum value. </summary>
 	T mMinValue;
+	/// <summary>	The maximum value. </summary>
 	T mMaxValue;
 
+	/// <summary>	True if clicked. </summary>
 	bool mClicked;
 	
-	// Resources
+	/// <summary>	Resources. </summary>
 	std::shared_ptr<class SpriteSheet> mGuiSpriteSheet;
+	/// <summary>	The text. </summary>
 	std::shared_ptr<class Text> mText;
 };
 
@@ -67,10 +154,12 @@ inline void Slider<T>::create(std::shared_ptr<class SpriteSheet> guiSpriteSheet,
 	mMinValue = minValue;
 	mMaxValue = maxValue;
 	mValue = minValue;
+
 	setPos(pos);
 
 	std::stringstream str;
 	str << mValue;
+
 	mText->updateContent(str.str(), renderer);
 }
 

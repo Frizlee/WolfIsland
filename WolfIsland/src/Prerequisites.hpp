@@ -1,7 +1,12 @@
+///-------------------------------------------------------------------------------------------------
+// file:	src\Prerequisites.hpp
+//
+// summary:	
+///-------------------------------------------------------------------------------------------------
 #pragma once
 
 
-// Include standart headers
+// Include standard headers
 #include <type_traits>
 #include <cstdint>
 #include <cstddef>

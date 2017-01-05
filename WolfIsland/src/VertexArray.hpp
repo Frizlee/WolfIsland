@@ -1,3 +1,8 @@
+///-------------------------------------------------------------------------------------------------
+// file:	src\VertexArray.hpp
+//
+// summary:	
+///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "GpuResource.hpp"
@@ -9,38 +14,128 @@ class GpuBuffer;
 template <typename T>
 class VertexBuffer;
 
+/// <summary>	A vertex array. </summary>
 class VertexArray : public GpuResource
 {
 public:
+	/// <summary>	Default constructor. </summary>
 	VertexArray();
 
-	// Copy/Move constructors and assignments
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Copy/Move constructors and assignments. </summary>
+	///
+	/// <param name="lhs">	The left hand side. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	VertexArray(const VertexArray& lhs) = delete;
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Move constructor. </summary>
+	///
+	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	VertexArray(VertexArray&& rhs);
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Assignment operator. </summary>
+	///
+	/// <param name="cas">	The cas. </param>
+	///
+	/// <returns>	A shallow copy of this object. </returns>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	VertexArray& operator=(VertexArray cas) = delete;
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Move assignment operator. </summary>
+	///
+	/// <param name="rhs">	[in,out] The right hand side. </param>
+	///
+	/// <returns>	A shallow copy of this object. </returns>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	VertexArray& operator=(VertexArray&& rhs);
-	
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Constructor. </summary>
+	///
+	/// <typeparam name="T">	Generic type parameter. </typeparam>
+	/// <param name="buffer">  	The buffer. </param>
+	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	template <typename T>
 	VertexArray(std::shared_ptr<VertexBuffer<T>> buffer, Renderer& renderer);
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Creates this object. </summary>
+	///
+	/// <typeparam name="T">	Generic type parameter. </typeparam>
+	/// <param name="buffer">  	The buffer. </param>
+	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	template <typename T>
 	void create(std::shared_ptr<VertexBuffer<T>> buffer, Renderer& renderer);
 
+	/// <summary>	Destructor. </summary>
 	~VertexArray();
 
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Adds an instance buffer to 'renderer'. </summary>
+	///
+	/// <typeparam name="T">	Generic type parameter. </typeparam>
+	/// <param name="buffer">  	The buffer. </param>
+	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	template <typename T>
 	void addInstanceBuffer(std::shared_ptr<VertexBuffer<T>> buffer, Renderer& renderer);
 
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Gets the buffer. </summary>
+	///
+	/// <returns>	The buffer. </returns>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<GpuBuffer> getBuffer();
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Gets instance buffer. </summary>
+	///
+	/// <returns>	The instance buffer. </returns>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<GpuBuffer> getInstanceBuffer();
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Gets vertex size. </summary>
+	///
+	/// <returns>	The vertex size. </returns>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	std::uint32_t getVertexSize() const;
 
+	/// <summary>	Clears this object to its blank/initial state. </summary>
 	void clear() override;
+
+	///--------------------------------------------------------------------------------------------
+	/// <summary>	Gets the size. </summary>
+	///
+	/// <returns>	The size. </returns>
+	/// 
+	///--------------------------------------------------------------------------------------------
 	std::uint32_t getSize() const override;
 
 private:
+	/// <summary>	The buffer. </summary>
 	std::shared_ptr<GpuBuffer> mBuffer;
+	/// <summary>	Buffer for instance data. </summary>
 	std::shared_ptr<GpuBuffer> mInstanceBuffer;
+	/// <summary>	Number of vertex attributes. </summary>
 	std::uint32_t mVertexAttribCount;
+	/// <summary>	Number of instance attributes. </summary>
 	std::uint32_t mInstanceAttribCount;
 
 };
