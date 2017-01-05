@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -128,12 +129,12 @@
     <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Codec.cpp" />
     <ClCompile Include="src\FlipbookAnimation.cpp" />
+    <ClCompile Include="src\gl_core_3_3.cpp" />
     <ClCompile Include="src\InformationPanel.cpp" />
     <ClCompile Include="src\MenuPanel.cpp" />
     <ClCompile Include="src\SpriteSheet.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
-    <ClCompile Include="src\gl_core_3_3.cpp" />
     <ClCompile Include="src\GpuBuffer.cpp" />
     <ClCompile Include="src\GpuResource.cpp" />
     <ClCompile Include="src\GuiObject.cpp" />
@@ -163,12 +164,12 @@
     <ClInclude Include="src\Button.hpp" />
     <ClInclude Include="src\Codec.hpp" />
     <ClInclude Include="src\FlipbookAnimation.hpp" />
+    <ClInclude Include="src\gl_core_3_3.hpp" />
     <ClInclude Include="src\InformationPanel.hpp" />
     <ClInclude Include="src\MenuPanel.hpp" />
     <ClInclude Include="src\SpriteSheet.hpp" />
     <ClInclude Include="src\Font.hpp" />
     <ClInclude Include="src\GameObject.hpp" />
-    <ClInclude Include="src\gl_core_3_3.hpp" />
     <ClInclude Include="src\GpuBuffer.hpp" />
     <ClInclude Include="src\GpuResource.hpp" />
     <ClInclude Include="src\GuiObject.hpp" />
