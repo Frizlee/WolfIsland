@@ -1,19 +1,17 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Codec.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
-#pragma once
+﻿#pragma once
 #include "Prerequisites.hpp"
 
-/// <summary>	Move it somewhere. </summary>
+/// <summary>	
+///		Tymczasowa skruktura służąca do kożystania z standardowych strumieni w odniesieniu 
+/// 	do bufora znajdującego się w pamięci. 
+/// </summary>
 struct memorybuf : std::streambuf
 {
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor </summary>
 	///
-	/// <param name="base">	[in,out] If non-null, the base. </param>
-	/// <param name="size">	The size. </param>
+	/// <param name="base">	Wskaźnik do pamięci. </param>
+	/// <param name="size">	Rozmiar danych. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	memorybuf(char *base, std::ptrdiff_t size)
@@ -23,29 +21,30 @@ struct memorybuf : std::streambuf
 };
 
 
-/// <summary>	A codec. </summary>
+/// <summary>	Klasa bazowa reprezentująca regóły kodowania i dekodowania zasobów. </summary>
 class Codec
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Codec();
-	/// <summary>	Destructor. </summary>
+
+	/// <summary>	Domyślny destruktor virtualny. Czyni klasę w pełni abstrakcyjną </summary>
 	virtual ~Codec() = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Decodes. </summary>
+	/// <summary>	Funkcja dekodująca zasób z podanego strumienia wejścia. </summary>
 	///
-	/// <param name="input">	[in,out] The input. </param>
-	/// <param name="res">  	[in,out] The resource. </param>
+	/// <param name="input">	Strumień wejścia. </param>
+	/// <param name="res">  	[out] Zdekodowany zasób. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual void decode(std::istream &input, class Resource &res) = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Encodes. </summary>
+	/// <summary>	Funkcja kodująca zasób do podanego strumienia wyjścia. </summary>
 	///
-	/// <param name="output">	[in,out] The output. </param>
-	/// <param name="res">   	[in,out] The resource. </param>
+	/// <param name="output">	[out] Strumień wyjścia. </param>
+	/// <param name="res">   	Zasób. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual void encode(std::ostream &output, class Resource &res) = 0;

@@ -1,18 +1,13 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Texture.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "Image.hpp"
 #include "GpuResource.hpp"
 
-/// <summary>	A texture. </summary>
+/// <summary>	Klasa reprezentująca teksturę w pamięci karty graficznej </summary>
 class Texture : public GpuResource
 {
 public:
-	/// <summary>	Values that represent types. </summary>
+	/// <summary>	Wartości reprezentujące typ tekstury. </summary>
 	enum class Type
 	{
 		UNCOMPRESSED_2D,
@@ -21,144 +16,164 @@ public:
 		COMPRESSED_2D_ARRAY
 	};
 
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Texture();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Copy/Move constructors and assignments. </summary>
+	/// <summary>	Niedozwolony konstruktor kopiujący. </summary>
 	///
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do skopiowania. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Texture(const Texture& lhs) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move constructor. </summary>
+	/// <summary>	Konstruktor przenoszący. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Texture(Texture&& rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Assignment operator. </summary>
+	/// <summary>	Niedozwolony operator przypisania. </summary>
 	///
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do przypisania </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Texture& operator=(const Texture& lhs) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move assignment operator. </summary>
+	/// <summary>	Operator przeniesienia </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Texture& operator=(Texture&& rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Create texture. </summary>
+	/// <summary>	Konstruktor tworzący teksturę z gotowego obrazka. </summary>
 	///
-	/// <param name="img">	   	The image. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="img">	   	Obrazek do przypisania do tekstury. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Texture(const Image& img, Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja tworząca teksturę z gotowego obrazka. </summary>
 	///
-	/// <param name="img">	   	The image. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="img">	   	Obrazek do przypisania do tekstury. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(const Image& img, Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Create texture array This functions needs to be reimlemented differently. </summary>
+	/// <summary>	
+	/// 	Konstruktor tworzący tablicę tekstur z gotowych obrazków. Muszą one być
+	/// 	tego samego rozmiaru i typu. 
+	/// </summary>
 	///
-	/// <param name="imgs">	   	[in,out] The imgs. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="imgs">	   	Tablica obrazków. </param>
+	/// <param name="renderer">	Obiekt renderera </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Texture(std::vector<Image>& imgs, Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>
+	/// 	Funkcja tworząca tablicę tekstur z gotowych obrazków. Muszą one być
+	/// 	tego samego rozmiaru i typu.
+	/// </summary>
 	///
-	/// <param name="imgs">	   	[in,out] The imgs. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="imgs">	   	Tablica obrazków. </param>
+	/// <param name="renderer">	Obiekt renderera </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::vector<Image>& imgs, Renderer& renderer);
 	
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Destruktor. Woła funkcję clear(). </summary>
 	~Texture();
-	/// <summary>	Clears this object to its blank/initial state. </summary>
+
+	/// <summary>	Czyści obiekt tekstury do stanu z przed inicializacji. </summary>
 	void clear() override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Generates the mipmaps. </summary>
+	/// <summary>	Funkcja generująca mipmapy tekstury. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void generateMipmaps(class Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the format. </summary>
+	/// <summary>	
+	///		Funkcja zwracająca format tekstury. Format rozróżnialny jest przez sposób reprezentacji
+	///		kolorów w pamięci. 
+	///	</summary>
 	///
-	/// <returns>	The format. </returns>
+	/// <returns>	Format tekstury. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Image::Format getFormat() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Query if this object has mipmap. </summary>
+	/// <summary>	Funkcja pytająca czy dana tekstura posiada wygenerowane mipmapy. </summary>
 	///
-	/// <returns>	True if mipmap, false if not. </returns>
+	/// <returns>	Prawda jeśli posiada mipmapy, fałsz jeśli nie posiada. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	bool hasMipmap() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the type. </summary>
+	/// <summary>	
+	/// 	Zwraca typ tekstury. Typ rozróżnialny jest przez sposób kompresji, ilość 
+	/// 	wymiarów oraz czy tekstura jest typu tablicowego czy też nie.
+	/// </summary>
 	///
-	/// <returns>	The type. </returns>
+	/// <returns>	Typ tekstury. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Type getType() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the size. </summary>
+	/// <summary>	
+	/// 	Funkcja pytająca o rozmiar obiektu tekstury w bajtach przechowywanych w pamięci karty 
+	/// 	graficznej.
+	/// </summary>
 	///
-	/// <returns>	The size. </returns>
+	/// <returns>	Rozmiar obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getSize() const override;
 
 private:
-	/// <summary>	Describes the format to use. </summary>
+	/// <summary>	Określa format tekstury. </summary>
 	Image::Format mFormat;
-	/// <summary>	The type. </summary>
+	/// <summary>	Określa typ tekstury. </summary>
 	Type mType;
-	/// <summary>	The size. </summary>
+	/// <summary>	Przechowuje rozmiar tekstury w pamięci karty graficznej. </summary>
 	std::uint32_t mSize;
-	/// <summary>	True if this object has mipmap. </summary>
+	/// <summary>	Prawda jeśli tekstura posiada mipmapy, fałsz jeśli nie posiada. </summary>
 	bool mHasMipmap;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Parse format. </summary>
+	/// <summary>	
+	/// 			Funkcja analizująca format obrazku i zwracająca format rozumiany przez OpenGL. 
+	/// </summary>
 	///
-	/// <param name="imgFormat">			   	The image format. </param>
-	/// <param name="format">				   	[in,out] Describes the format to use. </param>
-	/// <param name="internalFormat">		   	[in,out] The internal format. </param>
-	/// <param name="dataType">				   	[in,out] Type of the data. </param>
-	/// <param name="compressedInternalFormat">	[in,out] The compressed internal format. </param>
+	/// <param name="imgFormat">			   	Format obrazka </param>
+	/// <param name="format">				   	[out] Format poszczególnych pixeli. </param>
+	/// <param name="internalFormat">		   	[out] Format przechowywanych danych. </param>
+	/// <param name="dataType">				   	[out] Typ przechowywanych danych. </param>
+	/// <param name="compressedInternalFormat">	
+	/// 	[out] Format kompresji. 0 jeśli format jest nieskompresowany. 
+	/// </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	static void ParseFormat(Image::Format imgFormat, GLint &format, 

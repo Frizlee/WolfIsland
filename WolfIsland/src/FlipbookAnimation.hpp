@@ -1,97 +1,108 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\FlipbookAnimation.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
-#pragma once
+﻿#pragma once
 #include "Prerequisites.hpp"
 
 
-/// <summary>	A flipbook animation. </summary>
+/// <summary>	Klasa reprezentujaca animację typu flipbook. </summary>
 class FlipbookAnimation
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	FlipbookAnimation();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	
+	/// 	Konstruktor tworzący animację z podanego zbioru spriteów oraz kolejnych klatek 
+	/// 	animacji.  
+	/// </summary>
 	///
-	/// <param name="spriteSheet">	The sprite sheet. </param>
-	/// <param name="keyFrames">  	The key frames. </param>
-	/// <param name="duration">   	The duration. </param>
+	/// <param name="spriteSheet">	Zbiór spriteów animacji. </param>
+	/// <param name="keyFrames">  	Zbiór indeksów kolejnych klatek animacji. </param>
+	/// <param name="duration">   	Czas trwania animacji w sekundach. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	FlipbookAnimation(std::shared_ptr<class SpriteSheet> spriteSheet, 
 		const std::vector<std::uint32_t>& keyFrames, double duration);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	
+	/// 	Funkcja tworząca animację z podanego zbioru spriteów oraz kolejnych klatek 
+	/// 	animacji.  
+	/// </summary>
 	///
-	/// <param name="spriteSheet">	The sprite sheet. </param>
-	/// <param name="keyFrames">  	The key frames. </param>
-	/// <param name="duration">   	The duration. </param>
+	/// <param name="spriteSheet">	Zbiór spriteów animacji. </param>
+	/// <param name="keyFrames">  	Zbiór indeksów kolejnych klatek animacji. </param>
+	/// <param name="duration">   	Czas trwania animacji w sekundach. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::shared_ptr<class SpriteSheet> spriteSheet,
 		std::vector<std::uint32_t> keyFrames, double duration);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Destruktor. Nie robi nic szczególnego. </summary>
 	~FlipbookAnimation();
 	
-	/// <summary>	start from current position. </summary>
+	/// <summary>	Rozpoczyna animację zaczynając od aktualnej pozycji czasowej. </summary>
 	void start(); 
 
-	/// <summary>	start reverse form current position or if 0 from end. </summary>
+	/// <summary>	
+	/// 	Rozpoczyna animację wstecz o aktualnej pozycji czasowej lub jeśli wynosi ona 0
+	/// 	od końca.
+	/// </summary>
 	void reverse();
 
-	/// <summary>	start form 0. </summary>
+	/// <summary>	Rozpoczyna animację od początku. </summary>
 	void restart();
 
-	/// <summary>	set position to 0 and if playing - stops. </summary>
+	/// <summary>	Ustawia pozycję czasową na 0 i zatrzymuje animację. </summary>
 	void reset(); 
 
-	/// <summary>	stops playing. </summary>
+	/// <summary>	Zatrzymuje animację. </summary>
 	void stop();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca animację w czasie. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas jaki upłynął od ostatniej aktualizacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void update(double deltaTime);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a repeat. </summary>
+	/// <summary>	Funkcja ustawiająca stan samoczynnego powtarzania animacji. </summary>
 	///
-	/// <param name="state">	True to state. </param>
+	/// <param name="state">	Stan do ustawienia. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setRepeat(bool state);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets current sprite. </summary>
+	/// <summary>	
+	/// 	Funkcja pobierająca wskaźnik do aktualnego sprite animacji bazując na aktualnej 
+	/// 	klatce. 
+	/// </summary>
 	///
-	/// <returns>	The current sprite. </returns>
+	/// <returns>	Aktualny sprite animacji </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<const class Sprite> getCurrentSprite() const;
 
 private:
-	/// <summary>	The key frames indices. </summary>
+	/// <summary>	Indeksy kolejnych klatek animacji. </summary>
 	std::vector<std::uint32_t> mKeyFramesIndices;
-	/// <summary>	The sprite sheet. </summary>
+	/// <summary>	Wskaźnik na zbiór spriteów. </summary>
 	std::shared_ptr<class SpriteSheet> mSpriteSheet;
 
-	/// <summary>	The duration. </summary>
+	/// <summary>	Czas trwania animacji. </summary>
 	double mDuration;
-	/// <summary>	The current time. </summary>
+	/// <summary>	Aktualna pozycja czasowa. </summary>
 	double mCurrentTime;
-	/// <summary>	The play direction. </summary>
+	/// <summary>	
+	/// 	Kierunek odgrywania animacji. 
+	/// 	Jeśli 1.0 - odgrywanie normalne. 
+	/// 	Jeśli -1.0 - odgrywanie wsteczne
+	/// </summary>
 	double mPlayDirection;
 
-	/// <summary>	True to repeat. </summary>
+	/// <summary>	Stan samoczynnego powtarzania animacji. </summary>
 	bool mRepeat;
 };
 
