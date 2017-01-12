@@ -1,224 +1,242 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\ImageAtlas.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
-#pragma once
+﻿#pragma once
 #include "Prerequisites.hpp"
 #include "Image.hpp"
 #include <glm/vec4.hpp>
 
 
-/// <summary>	An image atlas. </summary>
+/// <summary>	Klasa reprezentująca atlas obrazków w pamięci. </summary>
 class ImageAtlas : public Image
 {
 public:
-	/// <summary>	Defines an alias representing the rectangle. </summary>
+	/// <summary>	Definicja typu reprezentującego prostokąt. </summary>
 	typedef glm::tvec4<std::uint32_t> Rect;
 
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	ImageAtlas();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move constructors and assignments Non copyable. </summary>
+	/// <summary>	Niedozwolony konstruktor kopiujący. </summary>
 	///
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do skopiowania. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	ImageAtlas(const ImageAtlas& lhs) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move constructor. </summary>
+	/// <summary>	Konstruktor przenoszący. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	ImageAtlas(ImageAtlas &&rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Assignment operator. </summary>
+	/// <summary>	Niedozwolony operator przypisania. </summary>
 	///
-	/// <param name="cas">	The cas. </param>
+	/// <param name="lhs">	Obiekt do przypisania. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	ImageAtlas& operator=(ImageAtlas cas) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move assignment operator. </summary>
+	/// <summary>	Operator przeniesienia. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	ImageAtlas& operator=(ImageAtlas &&rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Override constructors. </summary>
+	/// <summary>	
+	///		Konstruktor tworzący obrazek o podanym rozmiarze oraz kopiujący wartości danych obrazka
+	///		z podanego bufora. 
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
-	/// <param name="bytes"> 	The bytes. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
+	/// <param name="bytes"> 	Bufor danych obrazka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
-	ImageAtlas(std::uint32_t width, std::uint32_t height, Format format, 
+	ImageAtlas(std::uint32_t width, std::uint32_t height, Format format,
 		const std::vector<uint8_t> &bytes);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	
+	///		Funkcja tworząca obrazek o podanym rozmiarze oraz kopiująca wartości danych obrazka
+	///		z podanego bufora. 
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
-	/// <param name="bytes"> 	The bytes. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
+	/// <param name="bytes"> 	Bufor danych obrazka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::uint32_t width, std::uint32_t height, Format format,
 		const std::vector<std::uint8_t> &bytes);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	
+	///		Konstruktor tworzący obrazek o podanym rozmiarze oraz przenoszący wartości danych 
+	///		obrazka	z podanego bufora. 
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
-	/// <param name="bytes"> 	[in,out] The bytes. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
+	/// <param name="bytes"> 	Bufor danych obrazka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
-	ImageAtlas(std::uint32_t width, std::uint32_t height, Format format, 
+	ImageAtlas(std::uint32_t width, std::uint32_t height, Format format,
 		std::vector<uint8_t> &&bytes);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	
+	///		Funkcja tworząca obrazek o podanym rozmiarze oraz przenosząca wartości danych 
+	///		obrazka	z podanego bufora. 
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
-	/// <param name="bytes"> 	[in,out] The bytes. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
+	/// <param name="bytes"> 	Bufor danych obrazka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::uint32_t width, std::uint32_t height, Format format,
 		std::vector<std::uint8_t> &&bytes);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	
+	///		Konstruktor tworzący czysty obrazek o podanym rozmiarze.
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	ImageAtlas(std::uint32_t width, std::uint32_t height, Format format);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	
+	///		Funkcja tworząca czysty obrazek o podanym rozmiarze.
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::uint32_t width, std::uint32_t height, Format format);
 	
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~ImageAtlas();
-	/// <summary>	Clears this object to its blank/initial state. </summary>
+
+	/// <summary>	Funkcja czyszcząca obiekt atlasu do stanu z przed inicializacji. </summary>
 	void clear();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Inserts the given image. </summary>
+	/// <summary>	
+	/// 	Umieszcza pojedyńczy obrazek wewnątrz atlasu. Dany obrazek musi mieć taki sam 
+	/// 	format jak atlas.
+	///  </summary>
 	///
-	/// <param name="img">	[in,out] The image. </param>
+	/// <param name="img">	Obiekt obrazka. </param>
 	///
-	/// <returns>	A Rect. </returns>
+	/// <returns>	Prostokąt opisujący położenie obrazka wewnątrz atlasu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Rect insert(Image &img);
 
 private:
-	/// <summary>	A node. </summary>
+	/// <summary>	Struktura opisująca węzeł służacy do bisekcji atlasu obrazków. </summary>
 	struct Node
 	{
-		/// <summary>	The childs[ 2]. </summary>
+		/// <summary>	Dzieci danego węzła. </summary>
 		std::unique_ptr<Node> mChilds[2];
-		/// <summary>	The rectangle. </summary>
+		/// <summary>	Prostokąt opisujący położenie węzła. </summary>
 		Rect mRect;
-		/// <summary>	True to free. </summary>
+		/// <summary>	Obiekt opisujący czy węzeł jest już zajęty przez obrazek. </summary>
 		bool mFree;
 
-		/// <summary>	Default constructor. </summary>
+		/// <summary>	Domyślny konstruktor. </summary>
 		Node();
 
-		///----------------------------------------------------------------------------------------
-		/// <summary>	Move constructors and assignments Non copyable. </summary>
+		///--------------------------------------------------------------------------------------------
+		/// <summary>	Niedozwolony konstruktor kopiujący. </summary>
 		///
-		/// <param name="lhs">	The left hand side. </param>
+		/// <param name="lhs">	Obiekt do skopiowania. </param>
 		/// 
-		///----------------------------------------------------------------------------------------
+		///--------------------------------------------------------------------------------------------
 		Node(const Node &lhs) = delete;
 
-		///----------------------------------------------------------------------------------------
-		/// <summary>	Constructor. </summary>
+		///--------------------------------------------------------------------------------------------
+		/// <summary>	Konstruktor przenoszący. </summary>
 		///
-		/// <param name="rhs">	[in,out] The right hand side. </param>
+		/// <param name="rhs">	Obiekt do przeniesienia. </param>
 		/// 
-		///----------------------------------------------------------------------------------------
+		///--------------------------------------------------------------------------------------------
 		Node(Node &&rhs);
 
-		///----------------------------------------------------------------------------------------
-		/// <summary>	Assignment operator. </summary>
+		///--------------------------------------------------------------------------------------------
+		/// <summary>	Niedozwolony operator przypisania. </summary>
 		///
-		/// <param name="cas">	The cas. </param>
+		/// <param name="lhs">	Obiekt do przypisania. </param>
 		///
-		/// <returns>	A shallow copy of this object. </returns>
+		/// <returns>	Referencja do aktualnego obiektu. </returns>
 		/// 
-		///----------------------------------------------------------------------------------------
+		///--------------------------------------------------------------------------------------------
 		Node& operator=(const Node &cas) = delete;
 
-		///----------------------------------------------------------------------------------------
-		/// <summary>	Move assignment operator. </summary>
+		///--------------------------------------------------------------------------------------------
+		/// <summary>	Operator przeniesienia. </summary>
 		///
-		/// <param name="rhs">	[in,out] The right hand side. </param>
+		/// <param name="rhs">	Obiekt do przeniesienia. </param>
 		///
-		/// <returns>	A shallow copy of this object. </returns>
+		/// <returns>	Referencja do aktualnego obiektu. </returns>
 		/// 
-		///----------------------------------------------------------------------------------------
+		///--------------------------------------------------------------------------------------------
 		Node& operator=(Node &&rhs);
 
 		///----------------------------------------------------------------------------------------
-		/// <summary>	Alignment warning. </summary>
+		/// <summary>	
+		/// 	Przeładowany operator alokacji pamięci. Wymagany z powodu wyrównywania 
+		/// 	bajtów 
+		/// </summary>
 		///
-		/// <param name="i">	Zero-based index of the. </param>
+		/// <param name="i">	Ilość pamięci do alokacji. </param>
+		/// 
+		/// <returns> Wzkaźnik do zaalokowanej pamięci. </returns>
 		/// 
 		///----------------------------------------------------------------------------------------
 		void* operator new(size_t i);
 
 		///----------------------------------------------------------------------------------------
-		/// <summary>	Object de-allocation operator. </summary>
+		/// <summary>	Dealokacja pamięci danej wskaźnikiem. </summary>
 		///
-		/// <param name="p">	[in,out] If non-null, the p to delete. </param>
-		///
-		/// <returns>	The result of the operation. </returns>
+		/// <param name="p">	Wskaźnik do pamięci. </param>
 		/// 
 		///----------------------------------------------------------------------------------------
 		void operator delete(void *p);
 
 		///----------------------------------------------------------------------------------------
-		/// <summary>	Inserts. </summary>
+		/// <summary>	Umieszczenie prostokątnego obiektu w drzewie. </summary>
 		///
-		/// <param name="width"> 	The width. </param>
-		/// <param name="height">	The height. </param>
+		/// <param name="width"> 	Szerokość. </param>
+		/// <param name="height">	Wysokość. </param>
 		///
-		/// <returns>	A Rect. </returns>
+		/// <returns>	Prostokąt opisujący położenie obiektu na atlasie. </returns>
 		/// 
 		///----------------------------------------------------------------------------------------
 		Rect insert(std::uint32_t width, std::uint32_t height);
 	};
 
-	/// <summary>	The root. </summary>
+	/// <summary>	Korzeń drzewa. </summary>
 	std::unique_ptr<Node> mRoot;
 };
 

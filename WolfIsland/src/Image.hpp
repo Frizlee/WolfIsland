@@ -1,21 +1,16 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Image.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
-#pragma once
+﻿#pragma once
 #include "Prerequisites.hpp"
 #include "Resource.hpp"
 
 
-/// <summary>	An image. </summary>
+/// <summary>	Klasa reprezentująca obrazek. </summary>
 class Image : public Resource
 {
 	friend class Texture;
 	friend class ImageAtlas;
 
 public:
-	/// <summary>	Values that represent formats. </summary>
+	/// <summary>	Format jaki może przyjąć obrazek w pamięci. </summary>
 	enum class Format
 	{
 		UNKNOWN = 0,
@@ -50,198 +45,225 @@ public:
 		RGBA = RGBA8,
 	};	
 	
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Image();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Copy/Move constructors and assignments. </summary>
+	/// <summary>	Konstruktor kopiujący. </summary>
 	///
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do skopiowania. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Image(const Image &lhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move constructor. </summary>
+	/// <summary>	Konstruktor przenoszący. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Image(Image &&rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Assignment operator. </summary>
+	/// <summary>	Operator przypisania. </summary>
 	///
-	/// <param name="cas">	The cas. </param>
+	/// <param name="lhs">	Obiekt do przypisania. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Image& operator=(Image cas);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move assignment operator. </summary>
+	/// <summary>	Operator przeniesienia. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Image& operator=(Image &&rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Copy bytes. </summary>
+	/// <summary>	
+	///		Konstruktor tworzący obrazek o podanym rozmiarze oraz kopiujący wartości danych obrazka
+	///		z podanego bufora. 
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
-	/// <param name="bytes"> 	The bytes. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
+	/// <param name="bytes"> 	Bufor danych obrazka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Image(std::uint32_t width, std::uint32_t height, Format format, 
 		const std::vector<std::uint8_t> &bytes);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	
+	///		Funkcja tworząca obrazek o podanym rozmiarze oraz kopiująca wartości danych obrazka
+	///		z podanego bufora. 
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
-	/// <param name="bytes"> 	The bytes. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
+	/// <param name="bytes"> 	Bufor danych obrazka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::uint32_t width, std::uint32_t height, Format format,
 		const std::vector<std::uint8_t> &bytes);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move bytes. </summary>
+	/// <summary>	
+	///		Konstruktor tworzący obrazek o podanym rozmiarze oraz przenoszący wartości danych 
+	///		obrazka	z podanego bufora. 
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
-	/// <param name="bytes"> 	[in,out] The bytes. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
+	/// <param name="bytes"> 	Bufor danych obrazka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
-	Image(std::uint32_t width, std::uint32_t height, Format format, 
+	Image(std::uint32_t width, std::uint32_t height, Format format,
 		std::vector<std::uint8_t> &&bytes);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	
+	///		Funkcja tworząca obrazek o podanym rozmiarze oraz przenosząca wartości danych 
+	///		obrazka	z podanego bufora. 
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
-	/// <param name="bytes"> 	[in,out] The bytes. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
+	/// <param name="bytes"> 	Bufor danych obrazka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::uint32_t width, std::uint32_t height, Format format,
 		std::vector<std::uint8_t> &&bytes);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Without bytes. </summary>
+	/// <summary>	
+	///		Konstruktor tworzący czysty obrazek o podanym rozmiarze.
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Image(std::uint32_t width, std::uint32_t height, Format format);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	
+	///		Funkcja tworząca czysty obrazek o podanym rozmiarze.
+	///	</summary>
 	///
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
-	/// <param name="format">	Describes the format to use. </param>
+	/// <param name="width"> 	Szerokość obrazka. </param>
+	/// <param name="height">	Wysokość obrazka. </param>
+	/// <param name="format">	Format obrazka w pamięci. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::uint32_t width, std::uint32_t height, Format format);
 	
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	virtual ~Image();
-	/// <summary>	Clears this object to its blank/initial state. </summary>
+
+	/// <summary>	Funkcja czyszcząca obiekt obrazka do stanu z przed inicializacji. </summary>
 	void clear() override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the format. </summary>
+	/// <summary>	Funkcja zwracająca format obrazka. </summary>
 	///
-	/// <returns>	The format. </returns>
+	/// <returns>	Format obrazka. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Format getFormat() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the width. </summary>
+	/// <summary>	Funkcja zwracająca szerokość obrazka. </summary>
 	///
-	/// <returns>	The width. </returns>
+	/// <returns>	Szerokość obrazka. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getWidth() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the height. </summary>
+	/// <summary>	Funkcja zwracająca wysokość obrazka. </summary>
 	///
-	/// <returns>	The height. </returns>
+	/// <returns>	Wysokość obrazka. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getHeight() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Query if this object is compressed. </summary>
+	/// <summary>	Funkcja pytająca czy obiekt obrazka jest skompresowany. </summary>
 	///
-	/// <returns>	True if compressed, false if not. </returns>
+	/// <returns>	Prawda jeżeli obiekt jest skompresowany, fałsz w przeciwnym wypadku. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	bool isCompressed() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Return block size if compressed. </summary>
+	/// <summary>	
+	/// 	Zwraca ilość bajtów na pixel lub jeżeli obiekt jest skompresowany rozmiar bloku (blok 
+	/// 	odnosi się do metody kompresji). 
+	/// </summary>
 	///
-	/// <returns>	The bytes per pixel. </returns>
+	/// <returns>	Ilość bajtów na pixel albo rozmiar bloku. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint8_t getBytesPerPixel() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Calculates the bytes per pixel. </summary>
+	/// <summary>	
+	/// 	Funkcja obliczająca ilość bajtów na pixel lub wielkość bloku (jeżeli obiekt 
+	/// 	skompresowany) z podanego formatu obrazka. 
+	/// </summary>
 	///
-	/// <param name="format">	Describes the format to use. </param>
+	/// <param name="format">	Format obrazka. </param>
 	///
-	/// <returns>	The calculated bytes per pixel. </returns>
+	/// <returns>	Ilość bajtów na pixel albo rozmiar bloku. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	static std::uint8_t CalculateBytesPerPixel(Format format);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	x and y must be in range [0, mWidth] and [0, mHeight]. </summary>
+	/// <summary>	
+	///		Ustawia wartość jednego pixela w pamięci o podanych koordynatach.
+	/// 	Muszą one być z zakresu: x - [0, mWidth], y - [0, mHeight]. 
+	/// </summary>
 	///
-	/// <param name="x">		The std::uint32_t to process. </param>
-	/// <param name="y">		The std::uint32_t to process. </param>
-	/// <param name="bytes">	The bytes. </param>
+	/// <param name="x">		Koordynat x pixela. </param>
+	/// <param name="y">		Koordynat y pixela. </param>
+	/// <param name="bytes">	Dane pixela w odpowiednim formacie. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setPixel(std::uint32_t x, std::uint32_t y, const std::vector<std::uint8_t> &bytes);
-	/// <summary>	Flip verticaly. </summary>
+
+	/// <summary>	Funkcja odwracająca obrazek w pionie. </summary>
 	void flipVerticaly();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar danych obrazka w pamięci. </summary>
 	///
-	/// <returns>	The size. </returns>
+	/// <returns>	Rozmiar w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getSize() const override;
 
 protected:
-	/// <summary>	The bytes. </summary>
+	/// <summary>	Dane obrazka w pamięci. </summary>
 	std::vector<std::uint8_t> mBytes;
 
 private:
-	/// <summary>	The width. </summary>
+	/// <summary>	Szerokość obrazka. </summary>
 	std::uint32_t mWidth;
-	/// <summary>	The height. </summary>
+	/// <summary>	Wysokość obrazka. </summary>
 	std::uint32_t mHeight;
-	/// <summary>	Describes the format to use. </summary>
+	/// <summary>	Format obrazka. </summary>
 	Format mFormat;
 };
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Prerequisites.hpp"
 
 /// <summary>	
@@ -21,7 +21,7 @@ struct memorybuf : std::streambuf
 };
 
 
-/// <summary>	Klasa bazowa reprezentująca regóły kodowania i dekodowania zasobów. </summary>
+/// <summary>	Klasa bazowa reprezentująca reguły kodowania i dekodowania zasobów. </summary>
 class Codec
 {
 public:

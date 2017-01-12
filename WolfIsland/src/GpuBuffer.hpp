@@ -1,13 +1,8 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\GpuBuffer.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "GpuResource.hpp"
 
-/// <summary>	Values that represent GPU buffer types. </summary>
+/// <summary>	Wartości reprezentujące typ bufora. </summary>
 enum class GpuBufferType
 {
 	VERTEX_BUFFER,
@@ -15,78 +10,80 @@ enum class GpuBufferType
 	COPY_READ_BUFFER
 };
 
-/// <summary>	Buffer for gpu. </summary>
+/// <summary>	
+/// 	Klasa abstrakcyjna obiektu bufora umieszczonego w pamięci karty graficznej.
+/// </summary>
 class GpuBuffer : public GpuResource
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	GpuBuffer() = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor zapisujący typ bufora. </summary>
 	///
-	/// <param name="type">	The type. </param>
+	/// <param name="type">	Typ bufora. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GpuBuffer(GpuBufferType type);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Copy constructor. </summary>
+	/// <summary>	Niedozwolony konstruktor kopiujący. </summary>
 	///
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do skopiowania. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GpuBuffer(const GpuBuffer &lhs) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move constructor. </summary>
+	/// <summary>	Konstruktor przenoszący. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GpuBuffer(GpuBuffer &&rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Assignment operator. </summary>
+	/// <summary>	Niedozwolony operator przypisania. </summary>
 	///
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do przypisania. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GpuBuffer& operator=(const GpuBuffer &lhs) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move assignment operator. </summary>
+	/// <summary>	Operator przeniesienia. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GpuBuffer& operator=(GpuBuffer &&rhs);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	virtual ~GpuBuffer() = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets entity size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar jednej encji danych zapisanych w buforze. </summary>
 	///
-	/// <returns>	The entity size. </returns>
+	/// <returns>	Rozmiar encji. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual std::uint32_t getEntitySize() const = 0;;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the type. </summary>
+	/// <summary>	Funkcja zwracająca typ bufora. </summary>
 	///
-	/// <returns>	The type. </returns>
+	/// <returns>	Typ bufora. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GpuBufferType getType() const;
 
 private:
-	/// <summary>	The type. </summary>
+	/// <summary>	Typ bufora. </summary>
 	GpuBufferType mType;
 	
 };

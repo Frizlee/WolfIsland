@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Prerequisites.hpp"
 #include "Resource.hpp"
 #include <ft2build.h>

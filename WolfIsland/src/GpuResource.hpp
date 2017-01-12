@@ -1,71 +1,68 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\GpuResource.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "gl_core_3_3.hpp"
 #include "Resource.hpp"
 
-/// <summary>	A GPU resource. </summary>
+/// <summary>	
+/// 	Klasa abstrakcyjna reprezentująca zasób przechowywany w pamięci karty graficznej. 
+/// </summary>
 class GpuResource : public Resource
 {
 	friend class Renderer;
 
 public:	
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	GpuResource();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Can't be copied. </summary>
+	/// <summary>	Niedozwolony konstruktor kopiujący. </summary>
 	///
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do skopiowania. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GpuResource(const GpuResource& lhs) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move constructor. </summary>
+	/// <summary>	Konstruktor przenoszący. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GpuResource(GpuResource&& rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Assignment operator. </summary>
+	/// <summary>	Niedozwolony operator przypisania. </summary>
 	///
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do przypisania. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GpuResource& operator=(const GpuResource& lhs) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move assignment operator. </summary>
+	/// <summary>	Operator przeniesienia. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GpuResource& operator=(GpuResource&& rhs);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	virtual ~GpuResource() = 0;
 
 protected:
-	/// <summary>	The identifier. </summary>
+	/// <summary>	Identyfikator OpenGL zasobu. </summary>
 	GLuint mID;
 
 private:
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the identifier. </summary>
+	/// <summary>	Funkcja zwracająca identyfikator obiektu. </summary>
 	///
-	/// <returns>	The identifier. </returns>
+	/// <returns>	Identyfikator OpenGL. </returns>
 	///--------------------------------------------------------------------------------------------
 	GLuint getID() const;
 };

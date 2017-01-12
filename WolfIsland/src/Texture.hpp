@@ -75,7 +75,7 @@ public:
 
 	///--------------------------------------------------------------------------------------------
 	/// <summary>	
-	/// 	Konstruktor tworzący tablicę tekstur z gotowych obrazków. Muszą one być
+	/// 	Konstruktor tworzący tablicę tekstur z gotowych obrazków. Muszą one byæ
 	/// 	tego samego rozmiaru i typu. 
 	/// </summary>
 	///
@@ -87,7 +87,7 @@ public:
 
 	///--------------------------------------------------------------------------------------------
 	/// <summary>
-	/// 	Funkcja tworząca tablicę tekstur z gotowych obrazków. Muszą one być
+	/// 	Funkcja tworząca tablicę tekstur z gotowych obrazków. Muszą one byæ
 	/// 	tego samego rozmiaru i typu.
 	/// </summary>
 	///
@@ -132,7 +132,7 @@ public:
 
 	///--------------------------------------------------------------------------------------------
 	/// <summary>	
-	/// 	Zwraca typ tekstury. Typ rozróżnialny jest przez sposób kompresji, ilość 
+	/// 	Zwraca typ tekstury. Typ rozróżnialny jest przez sposób kompresji, ilośæ 
 	/// 	wymiarów oraz czy tekstura jest typu tablicowego czy też nie.
 	/// </summary>
 	///

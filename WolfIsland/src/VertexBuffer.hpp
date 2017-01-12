@@ -1,8 +1,3 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\VertexBuffer.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "GpuBuffer.hpp"
@@ -10,160 +5,177 @@
 #include "Renderer.hpp"
 
 ///------------------------------------------------------------------------------------------------
-/// <summary>	Buffer for vertex. </summary>
+/// <summary>	Klasa reprezentująca bufor wierzchołków w pamięci karty graficznej. </summary>
 ///
-/// <typeparam name="T">	Generic type parameter. </typeparam>
+/// <typeparam name="T">	
+/// 	Typ danych umieszczanych w buforze. Musi dziedziczyć po Klasie 
+/// 	VertexLayout
+/// </typeparam>
 /// 
 ///------------------------------------------------------------------------------------------------
 template <typename T>
 class VertexBuffer : public GpuBuffer
 {
 public:
-	/// <summary>	Defines an alias representing the layout. </summary>
+	/// <summary>	
+	/// 	Definiuje typ Layout reprezentujący typ danych umieszczonych w aktualnym 
+	///		obiekcie. 
+	///	</summary>
 	typedef T Layout;
 
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	VertexBuffer();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Niedozwolony konstruktor kopiujący. </summary>
 	///
-	/// <typeparam name="T">	Generic type parameter. </typeparam>
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do skopiowania. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	VertexBuffer<T>(const VertexBuffer<T>& lhs) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor przenoszący. </summary>
 	///
-	/// <typeparam name="T">	Generic type parameter. </typeparam>
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	VertexBuffer<T>(VertexBuffer<T>&& rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Assignment operator. </summary>
+	/// <summary>	Niedozwolony operator przypisania. </summary>
 	///
-	/// <param name="cas">	The cas. </param>
+	/// <param name="cas">	Obiekt do przypisania. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	VertexBuffer<T>& operator=(VertexBuffer<T> cas) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move assignment operator. </summary>
+	/// <summary>	Operator przeniesienia. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	VertexBuffer<T>& operator=(VertexBuffer<T>&& rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor tworzący bufor na podaną ilość elementów. </summary>
 	///
-	/// <param name="elements">	The elements. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
-	/// <param name="dynamic"> 	(Optional) True to dynamic. </param>
+	/// <param name="elements">	Maksymalna ilość elementów w buforze. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
+	/// <param name="dynamic"> 	
+	/// 	[Opt] Jeżeli prawda, obiekt bufora jest dynamiczny (szybciej 
+	/// 	obsługuje zmiany zawartości). 
+	/// </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	VertexBuffer(std::uint32_t elements, Renderer &renderer, bool dynamic = false);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja tworząca bufor na podaną ilość elementów. </summary>
 	///
-	/// <param name="elements">	The elements. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
-	/// <param name="dynamic"> 	(Optional) True to dynamic. </param>
+	/// <param name="elements">	Maksymalna ilość elementów w buforze. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
+	/// <param name="dynamic"> 	
+	/// 	[Opt] Jeżeli prawda, obiekt bufora jest dynamiczny (szybciej 
+	/// 	obsługuje zmiany zawartości). 
+	/// </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::uint32_t elements, Renderer &renderer, bool dynamic = false);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~VertexBuffer();
-	/// <summary>	Clears this object to its blank/initial state. </summary>
+
+	/// <summary>	Czyści obiekt bufora do stanu z przed inicializacji. </summary>
 	void clear() override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar bufora w pamięci karty graficznej. </summary>
 	///
-	/// <returns>	The size. </returns>
+	/// <returns>	Rozmiar bufora w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getSize() const override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets entity size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar encji (jednego elementu bufora) </summary>
 	///
-	/// <returns>	The entity size. </returns>
+	/// <returns>	Rozmiar encji w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getEntitySize() const override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets elements count. </summary>
+	/// <summary>	Funkcja zwracająca ilość elementów w buforze. </summary>
 	///
-	/// <returns>	The elements count. </returns>
+	/// <returns>	Ilość elementów. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getElementsCount() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Adds lhsData. </summary>
+	/// <summary>	Funkcja kopiująca dane do bufora w pamięci karty graficzenej. </summary>
 	///
-	/// <param name="lhsData"> 	Information describing the left hand side. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="lhsData"> 	Dane do skopiowania do pamięci karty graficznej. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Pozycja danych w buforze. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t add(const std::vector<typename T::Data>& lhsData, Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Adds lhsData. </summary>
+	/// <summary>	
+	/// 	Funkcja kopiująca dane do bufora w pamięci karty graficzenej na
+	/// 	wyszczególnionej pozycji. 
+	/// </summary>
 	///
-	/// <param name="lhsData"> 	Information describing the left hand side. </param>
-	/// <param name="position">	The position. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="lhsData"> 	Dane do skopiowania do pamięci karty graficznej. </param>
+	/// <param name="position"> Miejsce do którego mają zostać skopiowane dane. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Pozycja danych w buforze. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
-	std::uint32_t add(const std::vector<typename T::Data>& lhsData, std::uint32_t position, 
+	std::uint32_t add(const std::vector<typename T::Data>& lhsData, std::uint32_t position,
 		Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Adds rhsData. </summary>
+	/// <summary>	Funkcja kopiująca dane do bufora w pamięci karty graficzenej. </summary>
 	///
-	/// <param name="rhsData"> 	[in,out] Information describing the right hand side. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="lhsData"> 	Dane do skopiowania do pamięci karty graficznej. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Pozycja danych w buforze. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t add(std::vector<typename T::Data>&& rhsData, Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Adds rhsData. </summary>
+	/// <summary>	
+	/// 	Funkcja kopiująca dane do bufora w pamięci karty graficzenej na
+	/// 	wyszczególnionej pozycji. 
+	/// </summary>
 	///
-	/// <param name="rhsData"> 	[in,out] Information describing the right hand side. </param>
-	/// <param name="position">	The position. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="lhsData"> 	Dane do skopiowania do pamięci karty graficznej. </param>
+	/// <param name="position"> Miejsce do którego mają zostać skopiowane dane. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Pozycja danych w buforze. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t add(std::vector<typename T::Data>&& rhsData, std::uint32_t position,
 		Renderer& renderer);
 
 private:
-	/// <summary>	The position. </summary>
+	/// <summary>	Ostatnia pozycja bufora. </summary>
 	std::uint32_t mPosition;
-	/// <summary>	The elements. </summary>
+	/// <summary>	Ilość elementów. </summary>
 	std::uint32_t mElements;
 };
 
