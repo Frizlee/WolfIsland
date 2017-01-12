@@ -242,4 +242,5 @@ dependencies/
 # data files
 *.png
 *.ttf
+*.xcf
 
