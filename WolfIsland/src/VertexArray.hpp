@@ -1,8 +1,3 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\VertexArray.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "GpuResource.hpp"
@@ -14,128 +9,139 @@ class GpuBuffer;
 template <typename T>
 class VertexBuffer;
 
-/// <summary>	A vertex array. </summary>
+/// <summary>	
+///		Klasa reprezentująca tablicę stanów OpenGL wraz z przypisanymi buforami i formatem wierzchołków
+/// </summary>
 class VertexArray : public GpuResource
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	VertexArray();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Copy/Move constructors and assignments. </summary>
+	/// <summary>	Niedozwolony konstruktor kopiujący. </summary>
 	///
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do skopiowania. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	VertexArray(const VertexArray& lhs) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move constructor. </summary>
+	/// <summary>	Konstruktor przenoszący. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	VertexArray(VertexArray&& rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Assignment operator. </summary>
+	/// <summary>	Niedozwolony operator przypisania. </summary>
 	///
-	/// <param name="cas">	The cas. </param>
+	/// <param name="lhs">	Obiekt do przypisania. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	VertexArray& operator=(VertexArray cas) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move assignment operator. </summary>
+	/// <summary>	Operator przeniesienia. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	VertexArray& operator=(VertexArray&& rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	
+	///		Konstruktor tworzący tablicę stanów odpowiadającom danemu buforowi wierzchołków. 
+	/// </summary>
 	///
-	/// <typeparam name="T">	Generic type parameter. </typeparam>
-	/// <param name="buffer">  	The buffer. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <typeparam name="T">	Typ danych bufora wierzchołków. </typeparam>
+	/// <param name="buffer">  	Bufor wierzchołków. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	template <typename T>
 	VertexArray(std::shared_ptr<VertexBuffer<T>> buffer, Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	
+	///		Funkcja tworząca tablicę stanów odpowiadającom danemu buforowi wierzchołków. 
+	/// </summary>
 	///
-	/// <typeparam name="T">	Generic type parameter. </typeparam>
-	/// <param name="buffer">  	The buffer. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <typeparam name="T">	Typ danych bufora wierzchołków. </typeparam>
+	/// <param name="buffer">  	Bufor wierzchołków. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	template <typename T>
 	void create(std::shared_ptr<VertexBuffer<T>> buffer, Renderer& renderer);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~VertexArray();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Adds an instance buffer to 'renderer'. </summary>
+	/// <summary>	Dodaje bufor instancji do tablisy stanów. </summary>
 	///
-	/// <typeparam name="T">	Generic type parameter. </typeparam>
-	/// <param name="buffer">  	The buffer. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <typeparam name="T">	Typ danych bufora instancji. </typeparam>
+	/// <param name="buffer">  	BUfor instancji. Jest to także bufor wierzchołków. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	template <typename T>
 	void addInstanceBuffer(std::shared_ptr<VertexBuffer<T>> buffer, Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the buffer. </summary>
+	/// <summary>	Funkcja zwracająca obiekt bufora wierzchołków. </summary>
 	///
-	/// <returns>	The buffer. </returns>
+	/// <returns>	Wskaźnik na bufor wierzchołków. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<GpuBuffer> getBuffer();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets instance buffer. </summary>
+	/// <summary>	FUnkcja zwracająca obiekt bufora instancji. </summary>
 	///
-	/// <returns>	The instance buffer. </returns>
+	/// <returns>	Wskaźnik na bufor instancji. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<GpuBuffer> getInstanceBuffer();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets vertex size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar jedneko wierzchołka. </summary>
 	///
-	/// <returns>	The vertex size. </returns>
+	/// <returns>	Rozmiar wierzchołka w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getVertexSize() const;
 
-	/// <summary>	Clears this object to its blank/initial state. </summary>
+	/// <summary>	
+	///		Funkcja czyszcząca obiekt tablicy stanów do stanu z przed inicializacji. 
+	/// </summary>
 	void clear() override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar obiektu w pamięci GPU. </summary>
 	///
-	/// <returns>	The size. </returns>
+	/// <returns>	Rozmiar w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getSize() const override;
 
 private:
-	/// <summary>	The buffer. </summary>
+	/// <summary>	Wskaźnik na bufor wierzchołków. </summary>
 	std::shared_ptr<GpuBuffer> mBuffer;
-	/// <summary>	Buffer for instance data. </summary>
+
+	/// <summary>	Wskaźnik na bufor instancji. </summary>
 	std::shared_ptr<GpuBuffer> mInstanceBuffer;
-	/// <summary>	Number of vertex attributes. </summary>
+
+	/// <summary>	Ilość atrybutów w danych wierzchołka. </summary>
 	std::uint32_t mVertexAttribCount;
-	/// <summary>	Number of instance attributes. </summary>
+
+	/// <summary>	Ilość atrybutów w danych instancji. </summary>
 	std::uint32_t mInstanceAttribCount;
 
 };

@@ -1,94 +1,99 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\SpriteSheet.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include <glm/vec2.hpp>
 
-/// <summary>	A sprite sheet. </summary>
+/// <summary>	Klasa reprezentująca zestaw spriteów. </summary>
 class SpriteSheet
 {
 	friend class Renderer;
 
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	SpriteSheet();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	
+	///		Konstruktor tworzący zestaw z podanej tablicy spriteów. Wszystkie muszą posiadać 
+	///		tę samą przypisaną teksturę
+	/// </summary>
 	///
-	/// <param name="sprites">	The sprites. </param>
+	/// <param name="sprites">	Tablica spriteów. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	SpriteSheet(const std::vector<std::shared_ptr<class Sprite>>& sprites);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	
+	///		Funkcja tworząca zestaw z podanej tablicy spriteów.Wszystkie muszą posiadać 
+	///		tę samą przypisaną teksturę
+	/// </summary>
 	///
-	/// <param name="sprites">	The sprites. </param>
+	/// <param name="sprites">	Tablica spriteów. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(const std::vector<std::shared_ptr<class Sprite>>& sprites);
 	
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~SpriteSheet();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Adds a sprite. </summary>
+	/// <summary>	Funkcja dodająca sprite do zestawu. </summary>
 	///
-	/// <param name="sprite">	The sprite. </param>
+	/// <param name="sprite">	Sprite do dodania. </param>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Index dodanego sprite. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t addSprite(std::shared_ptr<class Sprite> sprite);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the texture. </summary>
+	/// <summary>	Funkcja zwracająca teksturę przypisaną do zestawu. </summary>
 	///
-	/// <returns>	The texture. </returns>
+	/// <returns>	Wskaźnik na teksturę. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<const class Texture> getTexture() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets a sprite. </summary>
+	/// <summary>	Funkcja zwracająca obiekt sprite znajdujący się w zestawie. </summary>
 	///
-	/// <param name="index">	Zero-based index of the. </param>
+	/// <param name="index">	Index sprite. </param>
 	///
-	/// <returns>	The sprite. </returns>
+	/// <returns>	Wskaźnik na Sprite. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<const class Sprite> getSprite(std::uint32_t index) const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the vao. </summary>
+	/// <summary>	
+	///		Funkcja zwracająca przypisaną tablicę stanów OpenGL. (postać niemodyfikowalna)
+	/// </summary>
 	///
-	/// <returns>	The vao. </returns>
+	/// <returns>	Przypisana tablica stanów OpenGL. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<const class VertexArray> getVao() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the vao. </summary>
+	/// <summary>	
+	///		Funkcja zwracająca przypisaną tablicę stanów OpenGL.
+	/// </summary>
 	///
-	/// <returns>	The vao. </returns>
+	/// <returns>	Przypisana tablica stanów OpenGL. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<class VertexArray> getVao();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the bounds. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar prostokąta w który jest wpisany sprite. </summary>
 	///
-	/// <returns>	The bounds. </returns>
+	/// <returns>	Rozmiar prostokąta. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const glm::vec2& getBounds();
 
 private:
-	/// <summary>	The sprites. </summary>
+	/// <summary>	Tablica spriteów. </summary>
 	std::vector<std::shared_ptr<class Sprite>> mSprites;
 };
 

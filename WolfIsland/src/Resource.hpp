@@ -1,27 +1,23 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Resource.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 
-/// <summary>	A resource. </summary>
+/// <summary>	Klasa abstrakcyjna reprezentująca zasób w pamięci. </summary>
 class Resource
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Resource();
 	
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	virtual ~Resource() = 0;
-	/// <summary>	Clears this object to its blank/initial state. </summary>
+
+	/// <summary>	Czyści obiekt do stanu z przed inicializacji. </summary>
 	virtual void clear() = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar obiektu w pamięci. </summary>
 	///
-	/// <returns>	The size. </returns>
+	/// <returns>	Rozmiar obiektu w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual std::uint32_t getSize() const = 0;

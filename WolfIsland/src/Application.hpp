@@ -41,7 +41,11 @@ class ApplicationInitException : public std::exception
 	}
 };
 
-/// <summary>	An application. </summary>
+/// <summary>	
+///		An application. 
+///		ą, ć, ę, ł, ń, ó, ś, ź, ż
+///		Ą, Ć, Ę, Ł, Ń, Ó, Ś, Ź, Ż
+/// </summary>
 class Application
 {
 public:

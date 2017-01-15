@@ -1,32 +1,36 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Sprite.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "VertexLayout.hpp"
 #include <glm/vec2.hpp>
 
-/// <summary>	A sprite. </summary>
+/// <summary>	
+///		Klasa reprezentująca sprite. Jest to jeden z primitywnych obiektów do rysowania. 
+///		Przedstawia płaski wielokąt z nałożoną teksturą.
+/// </summary>
 class Sprite
 {
 	friend class Renderer;
 
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Sprite();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	
+	///		Konstruktor tworzący obiekt sprite w buforze wierzchołków podanej tablicy 
+	///		stanów OpenGL. 
+	///	</summary>
 	///
-	/// <param name="topRight">  	The top right. </param>
-	/// <param name="uvDownLeft">	The uv down left. </param>
-	/// <param name="uvTopRight">	The uv top right. </param>
-	/// <param name="z">		 	The z coordinate. </param>
-	/// <param name="tex">		 	[in,out] The tex. </param>
-	/// <param name="vao">		 	[in,out] The vao. </param>
-	/// <param name="renderer">  	[in,out] The renderer. </param>
+	/// <param name="topRight">  	
+	///		Wektor o punkcie zaczepienia (0, 0) i końcowi w prawym górnym rogu prostokąta 
+	///		reprezentowanego przez obiekt sprite. 
+	/// </param>
+	/// <param name="uvDownLeft">	Lewy dolny róg koordynatów tekstury. </param>
+	/// <param name="uvTopRight">	Prawy górny róg koordynatów tekstury. </param>
+	/// <param name="z">		 	Koordynat z przypisany do każdego wierzchołka. </param>
+	/// <param name="tex">		 	Obiekt tekstury. </param>
+	/// <param name="vao">		 	Tablica stanów OpenGL. </param>
+	/// <param name="renderer">  	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Sprite(const glm::vec2& topRight, const glm::vec2& uvDownLeft,
@@ -34,15 +38,21 @@ public:
 		std::shared_ptr<class VertexArray>& vao, class Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	
+	///		Funkcja tworząca obiekt sprite w buforze wierzchołków podanej tablicy 
+	///		stanów OpenGL. 
+	///	</summary>
 	///
-	/// <param name="topRight">  	The top right. </param>
-	/// <param name="uvDownLeft">	The uv down left. </param>
-	/// <param name="uvTopRight">	The uv top right. </param>
-	/// <param name="z">		 	The z coordinate. </param>
-	/// <param name="tex">		 	[in,out] The tex. </param>
-	/// <param name="vao">		 	[in,out] The vao. </param>
-	/// <param name="renderer">  	[in,out] The renderer. </param>
+	/// <param name="topRight">  	
+	///		Wektor o punkcie zaczepienia (0, 0) i końcowi w prawym górnym rogu prostokąta 
+	///		reprezentowanego przez obiekt sprite. 
+	/// </param>
+	/// <param name="uvDownLeft">	Lewy dolny róg koordynatów tekstury. </param>
+	/// <param name="uvTopRight">	Prawy górny róg koordynatów tekstury. </param>
+	/// <param name="z">		 	Koordynat z przypisany do każdego wierzchołka. </param>
+	/// <param name="tex">		 	Obiekt tekstury. </param>
+	/// <param name="vao">		 	Tablica stanów OpenGL. </param>
+	/// <param name="renderer">  	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(const glm::vec2& topRight, const glm::vec2& uvDownLeft, 
@@ -50,59 +60,67 @@ public:
 		std::shared_ptr<class VertexArray>& vao, class Renderer& renderer);
 	
 	
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyslny destruktor. </summary>
 	~Sprite();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the texture. </summary>
+	/// <summary>	Funkcja zwracająca przypisaną teksturę. </summary>
 	///
-	/// <returns>	The texture. </returns>
+	/// <returns>	Przypisana tekstura. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<const class Texture> getTexture() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the buffer. </summary>
+	/// <summary>	Funkcja zwracająca bufor wierzchołków sprite w pamięci CPU. </summary>
 	///
-	/// <returns>	The buffer. </returns>
+	/// <returns>	Bufor wierzchołków. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const std::vector<TextureVertexLayout::Data>& getBuffer() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the vao. </summary>
+	/// <summary>	
+	///		Funkcja zwracająca przypisaną tablicę stanów OpenGL. (postać niemodyfikowalna)
+	/// </summary>
 	///
-	/// <returns>	The vao. </returns>
+	/// <returns>	Przypisana tablica stanów OpenGL. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<const class VertexArray> getVao() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the vao. </summary>
+	/// <summary>	
+	///		Funkcja zwracająca przypisaną tablicę stanów OpenGL.
+	/// </summary>
 	///
-	/// <returns>	The vao. </returns>
+	/// <returns>	Przypisana tablica stanów OpenGL. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::weak_ptr<class VertexArray> getVao();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the bounds. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar prostokąta w który jest wpisany sprite. </summary>
 	///
-	/// <returns>	The bounds. </returns>
+	/// <returns>	Rozmiar prostokąta. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const glm::vec2& getBounds() const;
 
 private:
-	/// <summary>	The buffer. </summary>
+	/// <summary>	Obiekt bufora wierzchołków na CPU. </summary>
 	std::vector<TextureVertexLayout::Data> mBuffer;
-	/// <summary>	The vao. </summary>
+
+	/// <summary>	Wskaźnik na tablicę stanów OpenGL. </summary>
 	std::shared_ptr<class VertexArray> mVao;
-	/// <summary>	The vbo position. </summary>
+
+	/// <summary>	Pozycja w buforze wierzchołków na GPU. </summary>
 	std::uint32_t mVboPosition;
-	/// <summary>	The texture. </summary>
+
+	/// <summary>	Wskaźnik na obiekt tekstury. </summary>
 	std::shared_ptr<class Texture> mTexture;
-	/// <summary>	The bounds. </summary>
+
+	/// <summary>	Rozmiar prostokąta w który jest wpisany sprite. </summary>
 	glm::vec2 mBounds;
 };
 

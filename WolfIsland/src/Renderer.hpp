@@ -1,8 +1,3 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Renderer.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "gl_core_3_3.hpp"
@@ -11,37 +6,48 @@
 #include "Shader.hpp"
 
 
-/// <summary>	A renderer. </summary>
+/// <summary>	
+///		Klasa renderera odpowiadająca za rysowanie przymitywnych obiektów na scenie. 
+/// </summary>
 class Renderer
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Renderer();
-	/// <summary>	Destructor. </summary>
+
+	/// <summary>	Domyślny destrukotr. </summary>
 	~Renderer();
 
-	/// <summary>	S this object. </summary>
+	/// <summary>	
+	///		Funkcja inicjalizująca obiekt renderera. Ustawia wszystkie potrzebne stany OpenGL
+	/// </summary>
 	void init();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Consider using const references while not drunk. </summary>
+	/// <summary>	Funkcja która ustawia anktualny obiekt Shadera. </summary>
 	///
-	/// <param name="shader">	[in,out] The shader. </param>
+	/// <param name="shader">	Zlinkowany program Shadera do ustawienia. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void bindShader(class Shader& shader);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Bind texture. </summary>
+	/// <summary>	
+	///		Funkcja ustawiająca aktualną teksturę w podanym miejscu. Z regóły miejsce 0 oznacza
+	///		teksturę typu diffuse, ale zależy to od aktuanlnie używanego Shadera.
+	/// </summary>
 	///
-	/// <param name="texture">	[in,out] The texture. </param>
-	/// <param name="slot">   	The slot. </param>
+	/// <param name="texture">	Tekstura do ustawienia. </param>
+	/// <param name="slot">   	Miejsce na teksturę. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void bindTexture(class Texture& texture, std::int32_t slot);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Bind vertex array. </summary>
+	/// <summary>	
+	///		Funkcja ustawiająca aktualne stany OpenGL, w których skład wchodzą m. in. używany
+	///		bufor wierzchołków czy bufor indeksów.
+	/// </summary>
 	///
 	/// <param name="arr">	[in,out] The array. </param>
 	/// 
@@ -49,141 +55,176 @@ public:
 	void bindVertexArray(class VertexArray &arr);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Bind buffer. </summary>
+	/// <summary>	
+	///		Funkcja ustawiająca aktualny bufor GPU. Typ bufora zostanie pobrany automatycznie 
+	/// </summary>
 	///
-	/// <param name="buf">	[in,out] The buffer. </param>
+	/// <param name="buf">	Obiekt bufora GPU. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void bindBuffer(class GpuBuffer &buf);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Bind buffer. </summary>
+	/// <summary>	Funkcja ustawiająca aktualny bufor GPU jako bufor o podanym typie. </summary>
 	///
-	/// <param name="buf"> 	[in,out] The buffer. </param>
-	/// <param name="type">	[in,out] The type. </param>
+	/// <param name="buf"> 	Obiekt bufora GPU. </param>
+	/// <param name="type">	Typ bufora. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void bindBuffer(class GpuBuffer &buf, enum class GpuBufferType &type);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Bind ortho matrix. </summary>
+	/// <summary>	Funkcja ustawiająca aktualną macież ortagonalną. </summary>
 	///
-	/// <param name="orthoMatrix">	The ortho matrix. </param>
+	/// <param name="orthoMatrix">	Macież ortagonalna. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void bindOrthoMatrix(const glm::mat4& orthoMatrix);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Tests set depth. </summary>
+	/// <summary>	Funkcja ustawiająca stan testu głębokości. </summary>
 	///
-	/// <param name="state">	True to state. </param>
+	/// <param name="state">	Jeżeli prawda test będzie wykonywany, jeżeli fałsz - nie. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setDepthTest(bool state);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a viewport. </summary>
+	/// <summary>	Funkcja ustawiająca widok OpenGL. </summary>
 	///
-	/// <param name="dimensions">	The dimensions. </param>
+	/// <param name="dimensions">	Rozmiary widoku. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setViewport(const glm::tvec2<std::int32_t>& dimensions);
 
-	/// <summary>	Prepare draw sprite. </summary>
+	/// <summary>	Funkcja ustawiająca stany potrzebne do wykonania drawSprite(). </summary>
 	void prepareDrawSprite();
-	/// <summary>	Prepare draw text. </summary>
+
+	/// <summary>	Funkcja ustawiająca stany potrzebne do wykonania drawText(). </summary>
 	void prepareDrawText();
-	/// <summary>	Prepare draw sprite instanced. </summary>
+
+	/// <summary>	
+	///		Funkcja ustawiająca stany potrzebne do wykonania drawSpriteInstanced().
+	/// </summary>
 	void prepareDrawSpriteInstanced();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draw sprite. </summary>
+	/// <summary>	
+	///		Funkcja rysująca obiekt typu Sprite z podaną macierzą transformacji. Musi być 
+	///		poprzedzona wywołaniem funkcji prepareDrawSprite();
+	/// </summary>
 	///
-	/// <param name="sprite">		  	The sprite. </param>
-	/// <param name="transformMatrix">	The transform matrix. </param>
+	/// <param name="sprite">		  	Obiekt Sprite. </param>
+	/// <param name="transformMatrix">	Macierz transformacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void drawSprite(const class Sprite& sprite, const glm::mat4& transformMatrix);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draw text. </summary>
+	/// <summary>	
+	///		Funkcja rysująca obiekt typu Text z podaną macierzą transformacji. Musi być 
+	///		poprzedzona wywołaniem funkcji prepareDrawText();
+	/// </summary>
 	///
-	/// <param name="text">			  	The text. </param>
-	/// <param name="transformMatrix">	The transform matrix. </param>
+	/// <param name="text">			  	Obiekt Text. </param>
+	/// <param name="transformMatrix">	Macierz transformacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void drawText(const class Text& text, const glm::mat4& transformMatrix);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draw sprite instanced. </summary>
+	/// <summary>	
+	///		Funkcja rysująca obiekty typu Sprite z podaną macierzą transformacji. 
+	///		Musi być poprzedzona wywołaniem funkcji prepareDrawSpriteInstanced();
+	/// </summary>
 	///
-	/// <param name="sprite">		  	The sprite. </param>
-	/// <param name="transformMatrix">	The transform matrix. </param>
-	/// <param name="instances">	  	The instances. </param>
+	/// <param name="sprite">		  	Obiekt Sprite. </param>
+	/// <param name="transformMatrix">	Macierz transformacji. </param>
+	/// <param name="instances">		
+	///		Ilość obiektów znajdujących się w buforze instancji. 
+	/// </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
-	void drawSpriteInstanced(const class Sprite& sprite, const glm::mat4& transformMatrix, 
+	void drawSpriteInstanced(const class Sprite& sprite, const glm::mat4& transformMatrix,
 		std::uint32_t instances);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Query if this object is initialized. </summary>
+	/// <summary>	Funkcja pytająca czy obiekt Renderera jest gotowy do pracy. </summary>
 	///
-	/// <returns>	True if initialized, false if not. </returns>
+	/// <returns>	
+	///		Prawda jeśli obiekt jest już zinicjalizowany, fałsz w przeciwnym wypadku. 
+	/// </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	bool isInitialized() const;
 	
 private:
-	/// <summary>	True if initialized. </summary>
-	bool mInitialized;
-
-	/// <summary>	Values that represent setups. </summary>
+	/// <summary>	Wartości reprezentująca aktualnie rysowany typ obiektów. </summary>
 	enum class Setup
 	{
 		SPRITE,
 		TEXT,
 		SPRITE_INSTANCED
-	} mSetup;
+	};
 
-	/// <summary>	The ortho matrix. </summary>
+	/// <summary> Aktualnie rysowany typ obiektów. </summary>
+	Setup mSetup;
+
+	/// <summary>	
+	///		Prawda jeśli obiekt jest już zinicjalizowany, fałsz w przeciwnym wypadku. 
+	/// </summary>
+	bool mInitialized;
+
+
+	/// <summary>	Macierz ortagonalna. </summary>
 	glm::mat4 mOrthoMatrix;
 
-	/// <summary>	The text shader. </summary>
+	/// <summary>	Obiekt Shadera tekstu. </summary>
 	Shader mTextShader;
-	/// <summary>	The sprite shader. </summary>
+
+	/// <summary>	Obiekt Shadera spriteów. </summary>
 	Shader mSpriteShader;
-	/// <summary>	The sprite instanced shader. </summary>
+
+	/// <summary>	Obiekt Shadera instancjonowanych spriteów. </summary>
 	Shader mSpriteInstancedShader;
-	/// <summary>	The water shader. </summary>
+
+	/// <summary>	Obiekt Shadera wody - aktualnie nieużywany. </summary>
 	Shader mWaterShader;
 
-	/// <summary>	The sampler mipmap linear. </summary>
+	/// <summary>	Obiekt OpenGL samplera typu mipmap linear. (Filtrowanie trójliniowe) </summary>
 	GLuint mSamplerMipmapLinear;
-	/// <summary>	The sampler linear. </summary>
+
+	/// <summary>	Obiekt OpenGL samplera typu linear. (Filtrowanie dwuliniowe) </summary>
 	GLuint mSamplerLinear;
 
-	/// <summary>	The orthographic matrix location sprite. </summary>
+	/// <summary>	Lokacja macierzy ortagonalnej w shaderze spriteów. </summary>
 	GLint mOrthographicMatrixLocationSprite;
-	/// <summary>	The sampler location sprite. </summary>
+
+	/// <summary>	Lokacja samplera w shaderze spriteów. </summary>
 	GLint mSamplerLocationSprite;
 
-	/// <summary>	The orthographic matrix location text. </summary>
+	/// <summary>	Lokacja macierzy ortagonalnej w shaderze tekstu. </summary>
 	GLint mOrthographicMatrixLocationText;
-	/// <summary>	The sampler location text. </summary>
+
+	/// <summary>	Lokacja samplera w shaderze tekstu. </summary>
 	GLint mSamplerLocationText;
-	/// <summary>	The text color location text. </summary>
+
+	/// <summary>	Lokacja koloru tekstu w shaderze tekstu. </summary>
 	GLint mTextColorLocationText;
 	
-	/// <summary>	The orthographic matrix location sprite instanced. </summary>
+	/// <summary>	Lokacja macierzy ortagonalnej w shaderze instancjonowanych spriteów. </summary>
 	GLint mOrthographicMatrixLocationSpriteInstanced;
-	/// <summary>	The sampler location sprite instanced. </summary>
+
+	/// <summary>	Lokacja samplera w shaderze instancjonowanych spriteów. </summary>
 	GLint mSamplerLocationSpriteInstanced;
 
-	/// <summary>	The orthographic matrix location water. </summary>
+	/// <summary>	Lokacja macierzy ortagonalnej w shaderze wody. </summary>
 	GLint mOrthographicMatrixLocationWater;
-	/// <summary>	The sampler location water. </summary>
+
+	/// <summary>	Lokacja samplera w shaderze wody. </summary>
 	GLint mSamplerLocationWater;
-	/// <summary>	The displacement location water. </summary>
+
+	/// <summary>	Lokacja przemieszczenia tekstury w shaderze wody. </summary>
 	GLint mDisplacementLocationWater;
 };
 

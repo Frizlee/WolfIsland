@@ -1,217 +1,258 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\VertexLayout.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "gl_core_3_3.hpp"
 
-/// <summary>	A vertex format. </summary>
+/// <summary>	
+///		Struktura reprezentująca format jednego atrybutu wierzchołka w pamięci GPU. 
+/// </summary>
 struct VertexFormat
 {
-	/// <summary>	True to empty. </summary>
+	/// <summary>	Prawda jeżeli atrybut jest pusty. </summary>
 	bool empty;
-	/// <summary>	The size. </summary>
+
+	/// <summary>	Ilość komponentów danego typu. </summary>
 	GLint size;
-	/// <summary>	The type. </summary>
+
+	/// <summary>	Typ danych komponentu. </summary>
 	GLenum type;
-	/// <summary>	The normalized. </summary>
+
+	/// <summary>	Prawda jeżeli dane powinny zostać znormalizowane. </summary>
 	GLboolean normalized;
-	/// <summary>	The stride. </summary>
+
+	/// <summary>	Offset pomiędzy kolejnymi atrybutami tego typu. </summary>
 	GLsizei stride;
-	/// <summary>	The pointer. </summary>
+
+	/// <summary>	Położenie atrybutu. </summary>
 	std::uint32_t pointer;
 
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	VertexFormat();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor tworzący format. </summary>
 	///
-	/// <param name="size">		 	The size. </param>
-	/// <param name="type">		 	The type. </param>
-	/// <param name="normalized">	The normalized. </param>
-	/// <param name="stride">	 	The stride. </param>
-	/// <param name="pointer">   	The pointer. </param>
+	/// <param name="size">		 	Ilość komponentów danego typu. </param>
+	/// <param name="type">		 	Typ danych komponentu. </param>
+	/// <param name="normalized">	Prawda jeżeli dane powinny zostać znormalizowane. </param>
+	/// <param name="stride">	 	Offset pomiędzy kolejnymi atrybutami tego typu. </param>
+	/// <param name="pointer">   	Położenie atrybutu. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	VertexFormat(GLint size, GLenum type, GLboolean normalized, GLsizei stride, 
 		std::uint32_t pointer);
 };
 
-/// <summary>	A vertex layout. </summary>
+/// <summary>	Klasa abstrakcyjna reprezentująca format wierzchołków w pamięci. </summary>
 class VertexLayout
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	VertexLayout();
-	/// <summary>	Destructor. </summary>
+
+	/// <summary>	Domyślny dekstruktor. </summary>
 	virtual ~VertexLayout() = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the formats. </summary>
+	/// <summary>	Funkcja zwracająca formaty kolejnych atrybutów wierzchołka. </summary>
 	///
-	/// <returns>	The formats. </returns>
+	/// <returns>	Tablica atrybutów wierzchołków. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const std::vector<VertexFormat>& getFormats();
 
 protected:
-	/// <summary>	The formats. </summary>
+	/// <summary>	Tablica atrybutów wierzchołków.. </summary>
 	std::vector<VertexFormat> mFormats;
 };
 
-/// <summary>	A text vertex layout. </summary>
+/// <summary>	Format wierzchołków używany przy rysowaniu tekstu. </summary>
 class TextVertexLayout : public VertexLayout
 {
 public:
-	/// <summary>	A data. </summary>
+	/// <summary>	Struktura reprezentująca dane wierzchołka. </summary>
 	struct Data
 	{
-		float x, y;
-		float u, v;
+		/// <summary>	Współżędna x. </summary>
+		float x;
 
-		/// <summary>	Default constructor. </summary>
+		/// <summary>	Współżędna y. </summary>
+		float y;
+
+		/// <summary>	Współżędna tekstury u. </summary>
+		float u; 
+
+		/// <summary>	Współżędna tekstury v. </summary>
+		float v;
+
+		/// <summary>	Domyślny konstruktor. </summary>
 		Data();
 
 		///----------------------------------------------------------------------------------------
-		/// <summary>	Constructor. </summary>
+		/// <summary>	Konstruktor tworzący wierzchołek. </summary>
 		///
-		/// <param name="x">	The x coordinate. </param>
-		/// <param name="y">	The y coordinate. </param>
-		/// <param name="u">	The float to process. </param>
-		/// <param name="v">	The float to process. </param>
+		/// <param name="x">	Współżędna x. </param>
+		/// <param name="y">	Współżędna y. </param>
+		/// <param name="u">	Współżędna tekstury u. </param>
+		/// <param name="v">	Współżędna tekstury y. </param>
 		/// 
 		///----------------------------------------------------------------------------------------
 		Data(float x, float y, float u, float v);
 	};
 	
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	TextVertexLayout();
-	/// <summary>	Destructor. </summary>
+
+	/// <summary>	Domyślny destruktor. </summary>
 	~TextVertexLayout();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar wierzchołka. </summary>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Rozmiar wierzchołka w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	static std::uint32_t Size();
 };
 
-/// <summary>	A texture vertex layout. </summary>
+/// <summary>	Format wierzchołków używany przy rysowaniu obiektu z teksturą. </summary>
 class TextureVertexLayout : public VertexLayout
 {
 public:
-	/// <summary>	A data. </summary>
+	/// <summary>	Struktura reprezentująca dane wierzchołka. </summary>
 	struct Data
 	{
-		float x, y, z;
-		float u, v;
+		/// <summary>	Współżędna x. </summary>
+		float x;
 
-		/// <summary>	Default constructor. </summary>
+		/// <summary>	Współżędna y. </summary>
+		float y;
+
+		/// <summary>	Współżędna z. </summary>
+		float z;
+
+		/// <summary>	Współżędna tekstury u. </summary>
+		float u;
+
+		/// <summary>	Współżędna tekstury v. </summary>
+		float v;
+
+		/// <summary>	Domyślny konstruktor. </summary>
 		Data();
 
 		///----------------------------------------------------------------------------------------
-		/// <summary>	Constructor. </summary>
+		/// <summary>	Konstruktor tworzący wierzchołek. </summary>
 		///
-		/// <param name="x">	The x coordinate. </param>
-		/// <param name="y">	The y coordinate. </param>
-		/// <param name="z">	The z coordinate. </param>
-		/// <param name="u">	The float to process. </param>
-		/// <param name="v">	The float to process. </param>
+		/// <param name="x">	Współżędna x. </param>
+		/// <param name="y">	Współżędna y. </param>
+		/// <param name="z">	Współżędna z. </param>
+		/// <param name="u">	Współżędna tekstury u. </param>
+		/// <param name="v">	Współżędna tekstury y. </param>
 		/// 
 		///----------------------------------------------------------------------------------------
 		Data(float x, float y, float z, float u, float v);
 	};
 
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	TextureVertexLayout();
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~TextureVertexLayout();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar wierzchołka. </summary>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Rozmiar wierzchołka w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	static std::uint32_t Size();
 };
 
-/// <summary>	A color vertex layout. </summary>
+/// <summary>	Format wierzchołków używany przy rysowaniu obiektu z kolorem. </summary>
 class ColorVertexLayout : public VertexLayout
 {
 public:
-	/// <summary>	A data. </summary>
+	/// <summary>	Struktura reprezentująca dane wierzchołka. </summary>
 	struct Data
 	{
-		float x, y, z;
+		/// <summary>	Współżędna x. </summary>
+		float x;
+
+		/// <summary>	Współżędna y. </summary>
+		float y;
+
+		/// <summary>	Współżędna z. </summary>
+		float z;
+
+		/// <summary>	Kolor wierzchołka. </summary>
 		std::uint32_t color;
 
-		/// <summary>	Default constructor. </summary>
+		/// <summary>	Domyślny konstruktor. </summary>
 		Data();
 
 		///----------------------------------------------------------------------------------------
-		/// <summary>	Constructor. </summary>
+		/// <summary>	Konstruktor tworzący wierzchołek. </summary>
 		///
-		/// <param name="x">		The x coordinate. </param>
-		/// <param name="y">		The y coordinate. </param>
-		/// <param name="z">		The z coordinate. </param>
-		/// <param name="color">	The color. </param>
+		/// <param name="x">		Współżędna x. </param>
+		/// <param name="y">		Współżędna y. </param>
+		/// <param name="z">		Współżędna z. </param>
+		/// <param name="color">	Kolor wierzchołka. </param>
 		/// 
 		///----------------------------------------------------------------------------------------
 		Data(float x, float y, float z, std::uint32_t color);
 	};
 
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	ColorVertexLayout();
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~ColorVertexLayout();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar wierzchołka. </summary>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Rozmiar wierzchołka w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	static std::uint32_t Size();
 };
 
-/// <summary>	A position vertex layout. </summary>
+/// <summary>	Format wierzchołków używany przy rysowaniu samej pozycji. </summary>
 class PositionVertexLayout : public VertexLayout
 {
 public:
-	/// <summary>	A data. </summary>
+	/// <summary>	Struktura reprezentująca dane wierzchołka. </summary>
 	struct Data
 	{
-		float x, y, z;
+		/// <summary>	Współżędna x. </summary>
+		float x;
 
-		/// <summary>	Default constructor. </summary>
+		/// <summary>	Współżędna y. </summary>
+		float y;
+
+		/// <summary>	Współżędna z. </summary>
+		float z;
+
+		/// <summary>	Domyślny konstruktor. </summary>
 		Data();
 
 		///----------------------------------------------------------------------------------------
-		/// <summary>	Constructor. </summary>
+		/// <summary>	Konstruktor tworzący wierzchołek. </summary>
 		///
-		/// <param name="x">	The x coordinate. </param>
-		/// <param name="y">	The y coordinate. </param>
-		/// <param name="z">	The z coordinate. </param>
+		/// <param name="x">	Współżędna x. </param>
+		/// <param name="y">	Współżędna y. </param>
+		/// <param name="z">	Współżędna z. </param>
 		/// 
 		///----------------------------------------------------------------------------------------
 		Data(float x, float y, float z);
 	};
 
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	PositionVertexLayout();
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~PositionVertexLayout();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar wierzchołka. </summary>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Rozmiar wierzchołka w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	static std::uint32_t Size();

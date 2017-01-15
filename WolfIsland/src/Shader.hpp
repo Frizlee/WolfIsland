@@ -1,94 +1,90 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Shader.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "GpuResource.hpp"
 
-/// <summary>	A shader. </summary>
+/// <summary>	Klasa reprezentująca program Shadera w pamięci GPU. </summary>
 class Shader : public GpuResource
 {
 	friend class Renderer;
 
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Shader();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Copy/Move constructors and assignments. </summary>
+	/// <summary>	Niedozwolony konstruktor kopiujący. </summary>
 	///
-	/// <param name="lhs">	The left hand side. </param>
+	/// <param name="lhs">	Obiekt do skopiowania. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Shader(const Shader &lhs) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move constructor. </summary>
+	/// <summary>	Konstruktor przenoszący. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Shader(Shader &&rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Assignment operator. </summary>
+	/// <summary>	Niedozwolony operator przypisania. </summary>
 	///
-	/// <param name="cas">	The cas. </param>
+	/// <param name="lhs">	Obiekt do przypisania. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Shader& operator=(Shader cas) = delete;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Move assignment operator. </summary>
+	/// <summary>	Operator przeniesienia. </summary>
 	///
-	/// <param name="rhs">	[in,out] The right hand side. </param>
+	/// <param name="rhs">	Obiekt do przeniesienia. </param>
 	///
-	/// <returns>	A shallow copy of this object. </returns>
+	/// <returns>	Referencja do aktualnego obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Shader& operator=(Shader &&rhs);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor kompilujący i linkujący program Shadera z podprogramów. </summary>
 	///
-	/// <param name="vertexShader">  	The vertex shader. </param>
-	/// <param name="fragmentShader">	The fragment shader. </param>
+	/// <param name="vertexShader">  	Podprogram shadera wierzechołków. </param>
+	/// <param name="fragmentShader">	Podprogram shadera fragmentów. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Shader(std::string vertexShader, std::string fragmentShader);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja kompilująca i linkująca program Shadera z podprogramów. </summary>
 	///
-	/// <param name="vertexShader">  	The vertex shader. </param>
-	/// <param name="fragmentShader">	The fragment shader. </param>
+	/// <param name="vertexShader">  	Podprogram shadera wierzechołków. </param>
+	/// <param name="fragmentShader">	Podprogram shadera fragmentów. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::string vertexShader, std::string fragmentShader);
-	
-	/// <summary>	Clears this object to its blank/initial state. </summary>
+
+	/// <summary>	Funkcja czyszcząca obiekt shadera do stanu z przed inicializacji. </summary>
 	void clear() override;
-	/// <summary>	Destructor. </summary>
+
+	/// <summary>	Domyślny destruktor. </summary>
 	~Shader();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets a location. </summary>
+	/// <summary>	Funkcja zwracająca lokację parametru shadera. </summary>
 	///
-	/// <param name="name">	The name. </param>
+	/// <param name="name">	Nazwa parametru. </param>
 	///
-	/// <returns>	The location. </returns>
+	/// <returns>	Lokacja parametru. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	GLint getLocation(std::string name);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the size. </summary>
+	/// <summary>	Funkcja zwracająca rozmiar obiektu w pamięci GPU. </summary>
 	///
-	/// <returns>	The size. </returns>
+	/// <returns>	Rozmiar obiektu w bajtach. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getSize() const override;
