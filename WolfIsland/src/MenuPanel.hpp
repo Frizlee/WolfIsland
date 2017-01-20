@@ -1,31 +1,29 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\MenuPanel.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "GuiObject.hpp"
 #include "Slider.hpp"
 #include <glm/vec2.hpp>
 
 
-/// <summary>	Panel for editing the menu. </summary>
+/// <summary>	
+///		Klasa panelu zawierającego menu początkowe symulacji. Jest to element 
+///		interfejsu użytkownika.
+/// </summary>
 class MenuPanel : public GuiObject
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	MenuPanel();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor tworzący panel z podanych zasobów. </summary>
 	///
-	/// <param name="guiSpriteSheet">  	The graphical user interface sprite sheet. </param>
-	/// <param name="heightSliderText">	The height slider text. </param>
-	/// <param name="widthSliderText"> 	The width slider text. </param>
-	/// <param name="wolfSliderText">  	The wolf slider text. </param>
-	/// <param name="hareSliderText">  	The hare slider text. </param>
-	/// <param name="pos">			   	The position. </param>
-	/// <param name="renderer">		   	[in,out] The renderer. </param>
+	/// <param name="guiSpriteSheet">  	Zbiór spriteów interfejsu użytkownika. </param>
+	/// <param name="heightSliderText">	Obiekt tekstu dla slidera wysokości. </param>
+	/// <param name="widthSliderText"> 	Obiekt tekstu dla slidera szerokości. </param>
+	/// <param name="wolfSliderText">  	Obiekt tekstu dla slidera ilości wilków. </param>
+	/// <param name="hareSliderText">  	Obiekt tekstu dla slidera ilości zająców. </param>
+	/// <param name="pos">			   	Pozycja panelu. </param>
+	/// <param name="renderer">		   	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	MenuPanel(std::shared_ptr<class SpriteSheet> guiSpriteSheet, 
@@ -36,15 +34,15 @@ public:
 		const glm::vec2& pos, class Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja tworząca panel z podanych zasobów. </summary>
 	///
-	/// <param name="guiSpriteSheet">  	The graphical user interface sprite sheet. </param>
-	/// <param name="heightSliderText">	The height slider text. </param>
-	/// <param name="widthSliderText"> 	The width slider text. </param>
-	/// <param name="wolfSliderText">  	The wolf slider text. </param>
-	/// <param name="hareSliderText">  	The hare slider text. </param>
-	/// <param name="pos">			   	The position. </param>
-	/// <param name="renderer">		   	[in,out] The renderer. </param>
+	/// <param name="guiSpriteSheet">  	Zbiór spriteów interfejsu użytkownika. </param>
+	/// <param name="heightSliderText">	Obiekt tekstu dla slidera wysokości. </param>
+	/// <param name="widthSliderText"> 	Obiekt tekstu dla slidera szerokości. </param>
+	/// <param name="wolfSliderText">  	Obiekt tekstu dla slidera ilości wilków. </param>
+	/// <param name="hareSliderText">  	Obiekt tekstu dla slidera ilości zająców. </param>
+	/// <param name="pos">			   	Pozycja panelu. </param>
+	/// <param name="renderer">		   	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::shared_ptr<class SpriteSheet> guiSpriteSheet,
@@ -54,64 +52,74 @@ public:
 		std::shared_ptr<class Text> hareSliderText,
 		const glm::vec2& pos, class Renderer& renderer);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~MenuPanel();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca panel przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void draw(class Renderer& renderer) const override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Grab input. </summary>
+	/// <summary>	Funkcja obsługująca wejście do panelu. </summary>
 	///
-	/// <param name="orthoMatrix">	The ortho matrix. </param>
-	/// <param name="app">		  	[in,out] The application. </param>
+	/// <param name="orthoMatrix">	
+	///		Macierz ortagonalna przedstawiająca skalę i położenię 
+	///		interfejsu urzytkownika. 
+	/// </param>
+	/// <param name="app">		  	Obiekt aplikacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void grabInput(const glm::mat4& orthoMatrix, class Application& app) override;
-
+	
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca stan panelu. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy kolejnymi krokami pętli stałokrokowej. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void update(double deltaTime) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a position. </summary>
+	/// <summary>	Funkcja ustawiająca pozycję panelu. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Nowa pozycja panelu. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setPos(const glm::vec2& pos);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the values. </summary>
+	/// <summary>	Funkcja pobierająca kolejne wratości sliderów. </summary>
 	///
-	/// <returns>	The values. </returns>
+	/// <returns>	
+	///		Tablica wartości sliderów. Kolejno: wysokość, szerokość, ilość wilków, ilość 
+	///		zająców.
+	/// </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::array<std::int32_t, 4> getValues() const;
 
 private:
 
-	/// <summary>	The position. </summary>
+	/// <summary>	Pozycja panelu. </summary>
 	glm::vec2 mPos;
 
-	/// <summary>	Resources. </summary>
+	/// <summary>	Zbiór spriteów interfejsu użytkownika. </summary>
 	std::shared_ptr<class SpriteSheet> mGuiSpriteSheet;
-	/// <summary>	The height slider. </summary>
+
+	/// <summary>	Obiekt slidera wysokości. </summary>
 	std::shared_ptr<Slider<std::int32_t>> mHeightSlider;
-	/// <summary>	The width slider. </summary>
+
+	/// <summary>	Obiekt slidera szerokości. </summary>
 	std::shared_ptr<Slider<std::int32_t>> mWidthSlider;
-	/// <summary>	The wolf slider. </summary>
+
+	/// <summary>	Obiekt slidera ilośći wilków. </summary>
 	std::shared_ptr<Slider<std::int32_t>> mWolfSlider;
-	/// <summary>	The hare slider. </summary>
+
+	/// <summary>	Obiekt slidera ilości zajaców. </summary>
 	std::shared_ptr<Slider<std::int32_t>> mHareSlider;
 };
 

@@ -1,91 +1,89 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Boulder.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "GameObject.hpp"
 
-/// <summary>	A boulder. </summary>
+/// <summary>	Klasa reprezentująca obiekt symulacji jakim jest głaz. Typ: "boulder" </summary>
 class Boulder :	public GameObject
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Boulder();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor tworzący głaz z podanych zasobów. </summary>
 	///
-	/// <param name="boulderSprite">	The boulder sprite. </param>
+	/// <param name="boulderSprite">	Obiekt sprite dla głazu. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Boulder(std::shared_ptr<class Sprite> boulderSprite);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja tworząca głaz z podanych zasobów. </summary>
 	///
-	/// <param name="boulderSprite">	The boulder sprite. </param>
+	/// <param name="boulderSprite">	Obiekt sprite dla głazu. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::shared_ptr<class Sprite> boulderSprite);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~Boulder();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets real position. </summary>
+	/// <summary>	Funkcja zwracająca rzeczywistą pozycję głazu. </summary>
 	///
-	/// <returns>	The real position. </returns>
+	/// <returns>	Rzeczywista pozycja głazu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const glm::vec2& getRealPos();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca głaz przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void draw(class Renderer& renderer) const override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the move described by board. </summary>
+	/// <summary>	
+	///		Funkcja aktualizacji poruszania się głazu. Nie robi nic, ponieważ głaz nie 
+	///		może się poruszać.
+	/// </summary>
 	///
-	/// <param name="board">	[in,out] The board. </param>
+	/// <param name="board">	Obiekt planszy. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void updateMove(class Board& board) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the action described by board. </summary>
+	/// <summary>	Funkcja aktualizacji akcji głazu. </summary>
 	///
-	/// <param name="board">	[in,out] The board. </param>
+	/// <param name="board">	Obiekt planszy. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void updateAction(class Board& board) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca animację raz na klatkę. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy klatkami animacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void update(float deltaTime) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a position. </summary>
+	/// <summary>	Funkcja ustawiająca pozycję. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Nowa pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setPos(const glm::tvec2<std::int32_t>& pos);
 
 private:
-	/// <summary>	The real position. </summary>
+	/// <summary>	Rzeczywista pozycja głazu. </summary>
 	glm::vec2 mRealPos;
 
-	/// <summary>	Resources. </summary>
+	/// <summary>	Obiekt sprite dla głazu. </summary>
 	std::shared_ptr<class Sprite> mSprite;
 };
 

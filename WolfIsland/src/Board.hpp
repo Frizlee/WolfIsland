@@ -1,8 +1,3 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Board.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "Sprite.hpp"
@@ -11,32 +6,32 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 
-/// <summary>	A board. </summary>
+/// <summary>	Klasa przedstawiająca planszę symulacji. </summary>
 class Board
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Board();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor tworzący planszę. </summary>
 	///
-	/// <param name="width">	  	The width. </param>
-	/// <param name="height">	  	The height. </param>
-	/// <param name="spriteSheet">	The sprite sheet. </param>
-	/// <param name="renderer">   	[in,out] The renderer. </param>
+	/// <param name="width">	  	Szerokość planszy. </param>
+	/// <param name="height">	  	Wysokość planszy. </param>
+	/// <param name="spriteSheet">	Zestaw spritów planszy. </param>
+	/// <param name="renderer">   	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Board(std::uint32_t width, std::uint32_t height, 
 		std::shared_ptr<class SpriteSheet> spriteSheet, class Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja tworząca planszę. </summary>
 	///
-	/// <param name="width">	  	The width. </param>
-	/// <param name="height">	  	The height. </param>
-	/// <param name="spriteSheet">	The sprite sheet. </param>
-	/// <param name="renderer">   	[in,out] The renderer. </param>
+	/// <param name="width">	  	Szerokość planszy. </param>
+	/// <param name="height">	  	Wysokość planszy. </param>
+	/// <param name="spriteSheet">	Zestaw spritów planszy. </param>
+	/// <param name="renderer">   	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::uint32_t width, std::uint32_t height, 
@@ -46,129 +41,139 @@ public:
 	~Board();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca planszę przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void draw(class Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the objects. </summary>
+	/// <summary>	Funkcja pobierająca obiekty na planszy. </summary>
 	///
-	/// <returns>	The objects. </returns>
+	/// <returns>	Tablica obiektów na planszy. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const std::vector<std::shared_ptr<class GameObject>>& getObjects() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the objects. </summary>
+	/// <summary>	Funkcja pobierająca obiekty z podanej pozycji. </summary>
 	///
-	/// <param name="pos">  	The position. </param>
-	/// <param name="saved">	(Optional) True if the data was saved. </param>
+	/// <param name="pos">  	Pozycja obiektów. </param>
+	/// <param name="saved">	
+	///		[Opt] Prawda jeżeli pozycja jest tą zapisaną na początku klatki. 
+	/// </param>
 	///
-	/// <returns>	The objects. </returns>
+	/// <returns>	Tablica obiektów na planszy. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::vector<std::shared_ptr<class GameObject>> getObjects(const glm::tvec2<std::int32_t>& pos, 
 		bool saved = true);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets surrounding objects. </summary>
+	/// <summary>	Funkcja pobierająca obiekty na planszy otaczające daną pozycję. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Pozycja. </param>
 	///
-	/// <returns>	The surrounding objects. </returns>
+	/// <returns>	Tablica obiektów na planszy. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::vector<std::shared_ptr<class GameObject>> getSurroundingObjects(
 		const glm::tvec2<std::int32_t>& pos);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Adds a game object. </summary>
+	/// <summary>	Funkcja dodająca obiekt do planszy. </summary>
 	///
-	/// <param name="object">	[in,out] The object. </param>
+	/// <param name="object">	Obiekt do dodania. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void addGameObject(std::shared_ptr<class GameObject>& object);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the width. </summary>
+	/// <summary>	Funkcja zwracająca szerokość planszy. </summary>
 	///
-	/// <returns>	The width. </returns>
+	/// <returns>	Szerokość planszy. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getWidth() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the height. </summary>
+	/// <summary>	Funkcja zwracająca wysokość planszy. </summary>
 	///
-	/// <returns>	The height. </returns>
+	/// <returns>	Wysokośc planszy. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::uint32_t getHeight() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Spawn wolf. </summary>
+	/// <summary>	Funkcja stawiająca obiekt wilka na podanej pozycji. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void spawnWolf(glm::tvec2<std::int32_t> pos);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Spawn hare. </summary>
+	/// <summary>	Funkcja stawiająca obiekt zająca na podanej pozycji. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void spawnHare(glm::tvec2<std::int32_t> pos);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets object counters. </summary>
+	/// <summary>	Funkcja zwracająca liczniki obiektów na planszy. </summary>
 	///
-	/// <returns>	The object counters. </returns>
+	/// <returns>	
+	///		Tablica liczników obiektów. Kolejno: sance wilków, samice wilków,
+	///		zające, głazy, krzaki. 
+	/// </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const std::array<std::int32_t, 5>& getObjectCounters();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Query if this object is counters changed. </summary>
+	/// <summary>	Funkcja sprawdzająca czy zmienił się stan liczników. </summary>
 	///
-	/// <returns>	True if counters changed, false if not. </returns>
+	/// <returns>	Prawda jeżeli zmienił się stan liczników. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	bool isCountersChanged();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the turn described by app. </summary>
+	/// <summary>	Funkcja aktualizująca turę. </summary>
 	///
-	/// <param name="app">	[in,out] The application. </param>
+	/// <param name="app">	Obiekt aplikacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void updateTurn(class Application& app);
 
 private:
-	/// <summary>	The width. </summary>
+	/// <summary>	Szerokość planszy. </summary>
 	std::uint32_t mWidth;
-	/// <summary>	The height. </summary>
+
+	/// <summary>	Wysokość planszy. </summary>
 	std::uint32_t mHeight;
 	
-	/// <summary>	The objects. </summary>
+	/// <summary>	Tablica obiektów na planszy. </summary>
 	std::vector<std::shared_ptr<class GameObject>> mObjects;
-	/// <summary>	Stack of hare spawns. </summary>
+
+	/// <summary>	Stos ustawianych zająców. </summary>
 	std::stack<glm::tvec2<std::int32_t>> mHareSpawnStack;
-	/// <summary>	Stack of wolf spawns. </summary>
+
+	/// <summary>	Stos ustawianych wilków. </summary>
 	std::stack<glm::tvec2<std::int32_t>> mWolfSpawnStack;
 
-	/// <summary>	The object counters. </summary>
+	/// <summary>	Tablica liczników obiektów. </summary>
 	std::array<std::int32_t, 5> mObjectCounters;
-	/// <summary>	True if this object is counters changed. </summary>
+
+	/// <summary>	Prawda jeżeli zmieniły się wartości liczników. </summary>
 	bool mIsCountersChanged;
 
-	/// <summary>	Resources. </summary>
+	/// <summary>	Mapa kafelków w pamięci GPU. </summary>
 	std::vector<std::shared_ptr<VertexBuffer<PositionVertexLayout>>> mTileMap;
-	/// <summary>	The sprite sheet. </summary>
+
+	/// <summary>	Zestaw spriteów planszy. </summary>
 	std::shared_ptr<SpriteSheet> mSpriteSheet;
 };
 

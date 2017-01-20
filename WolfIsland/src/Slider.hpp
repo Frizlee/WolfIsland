@@ -1,90 +1,97 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Slider.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "GuiObject.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 
+///------------------------------------------------------------------------------------------------
+/// <summary>	
+///		Klasa slidera (suwaka) - elementu interfejsu użytkownika rysowanego za pomocą OpenGL. 
+/// </summary>
+///
+/// <typeparam name="T">	
+/// 	Typ danych jakie na jakich operuje suwak.
+/// </typeparam>
+/// 
+///------------------------------------------------------------------------------------------------
 template <typename T>
-/// <summary>	A slider. </summary>
 class Slider : public GuiObject
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konsturktor. </summary>
 	Slider();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor tworzący slider z podanych zasobów. </summary>
 	///
-	/// <param name="guiSpriteSheet">	The graphical user interface sprite sheet. </param>
-	/// <param name="text">			 	The text. </param>
-	/// <param name="minValue">		 	The minimum value. </param>
-	/// <param name="maxValue">		 	The maximum value. </param>
-	/// <param name="pos">			 	The position. </param>
-	/// <param name="renderer">		 	[in,out] The renderer. </param>
+	/// <param name="guiSpriteSheet">	Zestaw spriteów interfejsu użytkownika. </param>
+	/// <param name="text">			 	Obiekt tekstu dla slidera. </param>
+	/// <param name="minValue">		 	Wartość maksymalna. </param>
+	/// <param name="maxValue">		 	Wartość minimalna. </param>
+	/// <param name="pos">			 	Pozycja slidera. </param>
+	/// <param name="renderer">		 	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Slider(std::shared_ptr<class SpriteSheet> guiSpriteSheet, std::shared_ptr<class Text> text,
 		const T& minValue, const T& maxValue, const glm::vec2& pos, class Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja tworząca slider z podanych zasobów. </summary>
 	///
-	/// <param name="guiSpriteSheet">	The graphical user interface sprite sheet. </param>
-	/// <param name="text">			 	The text. </param>
-	/// <param name="minValue">		 	The minimum value. </param>
-	/// <param name="maxValue">		 	The maximum value. </param>
-	/// <param name="pos">			 	The position. </param>
-	/// <param name="renderer">		 	[in,out] The renderer. </param>
+	/// <param name="guiSpriteSheet">	Zestaw spriteów interfejsu użytkownika. </param>
+	/// <param name="text">			 	Obiekt tekstu dla slidera. </param>
+	/// <param name="minValue">		 	Wartość maksymalna. </param>
+	/// <param name="maxValue">		 	Wartość minimalna. </param>
+	/// <param name="pos">			 	Pozycja slidera. </param>
+	/// <param name="renderer">		 	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::shared_ptr<class SpriteSheet> guiSpriteSheet, std::shared_ptr<class Text> text,
 		const T& minValue, const T& maxValue, const glm::vec2& pos, class Renderer& renderer);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~Slider();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca slider przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void draw(class Renderer& renderer) const override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Grab input. </summary>
+	/// <summary>	Funkcja obsługująca wejście do slidera. </summary>
 	///
-	/// <param name="orthoMatrix">	The ortho matrix. </param>
-	/// <param name="app">		  	[in,out] The application. </param>
+	/// <param name="orthoMatrix">	
+	///		Macierz ortagonalna przedstawiająca skalę i położenię 
+	///		interfejsu urzytkownika. 
+	/// </param>
+	/// <param name="app">		  	Obiekt aplikcaji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void grabInput(const glm::mat4& orthoMatrix, class Application& app) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca stan slidera. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy kolejnymi krokami pętli stałokrokowej. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void update(double deltaTime) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the value. </summary>
+	/// <summary>	Funkcja zwracająca aktualną wartość slidera. </summary>
 	///
-	/// <returns>	The value. </returns>
+	/// <returns>	Aktualna wartość. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const T& getValue() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a position. </summary>
+	/// <summary>	Funkcja ustawiająca pozycję slidera. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Nowa pozycja slidera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setPos(const glm::vec2& pos);
@@ -93,41 +100,46 @@ public:
 private:
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Slider index. </summary>
+	/// <summary>	Indeks sprite slidera. </summary>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Indeks. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	static constexpr std::uint32_t sliderIndex();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Button index. </summary>
+	/// <summary>	Indeks sprite przycisku. </summary>
 	///
-	/// <returns>	A std::uint32_t. </returns>
+	/// <returns>	Indeks. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	static constexpr std::uint32_t buttonIndex();
 
-	/// <summary>	The position. </summary>
+	/// <summary>	Pozycja slidera. </summary>
 	glm::vec2 mPos;
-	/// <summary>	The button position. </summary>
+
+	/// <summary>	Pozycja przycisku. </summary>
 	glm::vec2 mButtonPos;
-	/// <summary>	The text position. </summary>
+
+	/// <summary>	Pozycja tekstu. </summary>
 	glm::vec2 mTextPos;
 
-	/// <summary>	The value. </summary>
+	/// <summary>	Aktualna wartość. </summary>
 	T mValue;
-	/// <summary>	The minimum value. </summary>
+
+	/// <summary>	Minimalna wartość. </summary>
 	T mMinValue;
-	/// <summary>	The maximum value. </summary>
+
+	/// <summary>	Maksymalna wartość. </summary>
 	T mMaxValue;
 
-	/// <summary>	True if clicked. </summary>
+	/// <summary>	Prawda jeżeli naciśnięto przycisk slidera. </summary>
 	bool mClicked;
 	
-	/// <summary>	Resources. </summary>
+	/// <summary>	Zbiór spriteów interfejsu użytkownika. </summary>
 	std::shared_ptr<class SpriteSheet> mGuiSpriteSheet;
-	/// <summary>	The text. </summary>
+
+	/// <summary>	Obiekt tekstu. </summary>
 	std::shared_ptr<class Text> mText;
 };
 

@@ -1,8 +1,3 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Hare.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "GameObject.hpp"
@@ -11,122 +6,130 @@
 #include "gl_core_3_3.hpp"
 #include "FlipbookAnimation.hpp"
 
-
-/// <summary>	A hare. </summary>
+/// <summary>	
+///		Klasa reprezentująca obiekt symulacji jakim jest zając. Typ: "hare" 
+/// </summary>
 class Hare : public GameObject
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Hare();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor tworzący zająca z podanych zasobów. </summary>
 	///
-	/// <param name="spriteSheet">	The sprite sheet. </param>
+	/// <param name="spriteSheet">	Zestaw spriteow dla zajaca. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Hare(std::shared_ptr<class SpriteSheet> spriteSheet);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja tworząca zająca z podanych zasobów. </summary>
 	///
-	/// <param name="spriteSheet">	The sprite sheet. </param>
+	/// <param name="spriteSheet">	Zestaw spriteow dla zajaca. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::shared_ptr<class SpriteSheet> spriteSheet);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~Hare();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets real position. </summary>
+	/// <summary>	Funkcja zwracająca rzeczywistą pozycję zająca. </summary>
 	///
-	/// <returns>	The real position. </returns>
+	/// <returns>	Rzeczywista pozycja zająca. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const glm::vec2& getRealPos();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca zająca przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void draw(class Renderer& renderer) const override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the move described by board. </summary>
+	/// <summary>	Funkcja aktualizacji poruszania się zająca. </summary>
 	///
-	/// <param name="board">	[in,out] The board. </param>
+	/// <param name="board">	Obiekt planszy. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void updateMove(class Board& board) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the action described by board. </summary>
+	/// <summary>	Funkcja aktualizacji akcji zająca. </summary>
 	///
-	/// <param name="board">	[in,out] The board. </param>
+	/// <param name="board">	Obiekt planszy. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void updateAction(class Board& board) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca animację raz na klatkę. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy klatkami animacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void update(float deltaTime) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a position. </summary>
+	/// <summary>	Funkcja ustawiająca pozycję. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Nowa pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setPos(const glm::tvec2<std::int32_t>& pos);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets an eaten. </summary>
+	/// <summary>	Funkcja ustawiająca czy zając został zjedzony. </summary>
 	///
-	/// <param name="state">	True to state. </param>
+	/// <param name="state">	Prawda jeżeli zając ma zostać zjedzony. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setEaten(bool state);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Query if this object is eaten. </summary>
+	/// <summary>	Funkcja sprawdzająca czy zając został zjedzony. </summary>
 	///
-	/// <returns>	True if eaten, false if not. </returns>
+	/// <returns>	Prawda jeżeli zając został zjedzony. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	bool isEaten();
 
 private:
-	/// <summary>	The real position. </summary>
+	/// <summary>	Rzeczywista pozycja zająca. </summary>
 	glm::vec2 mRealPos;
-	/// <summary>	The random disorder. </summary>
+
+	/// <summary>	Losowy odchył o pozycji. </summary>
 	glm::vec2 mRandomDisorder;
-	
-	/// <summary>	Animations. </summary>
+
+	/// <summary>	Tablica obiekt animacji typu Flipbook dla zająca. </summary>
 	std::array<FlipbookAnimation, 9> mAnimations;
-	/// <summary>	The current animation. </summary>
+
+	/// <summary>	Aktualna animacja zająca. </summary>
 	std::uint32_t mCurrentAnimation;
-	/// <summary>	The current idle. </summary>
+
+	/// <summary>	Aktualna animacja spoczynkowa. </summary>
 	std::uint32_t mCurrentIdle;
-	/// <summary>	The transition start position. </summary>
+
+	/// <summary>	Punkt rozpoczęcia przemieszczania. </summary>
 	glm::vec2 mTransitionStartPos;
-	/// <summary>	The transition timer. </summary>
+
+	/// <summary>	Czas przemieszczania. </summary>
 	float mTransitionTimer;
-	/// <summary>	The corpse timer. </summary>
+
+	/// <summary>	Czas wyświetlania ciała zająca. </summary>
 	float mCorpseTimer;
 
-
-	/// <summary>	Logic. </summary>
+	/// <summary>	Licznik czasu do kolejnej możliwości podziału zająca. </summary>
 	std::uint32_t mSplitTourTimer;
-	/// <summary>	The life tours. </summary>
+
+	/// <summary>	Liczba pozostałych tur życia. </summary>
 	std::uint32_t mLifeTours;
-	/// <summary>	True if this object is eaten. </summary>
+
+	/// <summary>	Prawda jeżeli zając został zjedzony. </summary>
 	bool mIsEaten;
 };
 

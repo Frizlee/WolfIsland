@@ -1,91 +1,89 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Bush.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "GameObject.hpp"
 
-/// <summary>	A bush. </summary>
+/// <summary>	Klasa reprezentująca obiekt symulacji jakim jest krzak. Typ: "bush" </summary>
 class Bush :	public GameObject
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Bush();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	konstruktor tworzący krzak z podanych zasobów. </summary>
 	///
-	/// <param name="boulderSprite">	The boulder sprite. </param>
+	/// <param name="boulderSprite">	Obiekt sprite dla krzaka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
-	Bush(std::shared_ptr<class Sprite> boulderSprite);
+	Bush(std::shared_ptr<class Sprite> bushSprite);
 
 	///--------------------------------------------------------------------------------------------
 	/// <summary>	Creates this object. </summary>
 	///
-	/// <param name="boulderSprite">	The boulder sprite. </param>
+	/// <param name="boulderSprite">	Obiekt sprite dla krzaka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
-	void create(std::shared_ptr<class Sprite> boulderSprite);
+	void create(std::shared_ptr<class Sprite> bushSprite);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~Bush();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets real position. </summary>
+	/// <summary>	Funkcja zwracająca rzeczywistą pozycję krzaka. </summary>
 	///
-	/// <returns>	The real position. </returns>
+	/// <returns>	Rzeczywista pozycja głazu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const glm::vec2& getRealPos();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca krzak przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void draw(class Renderer& renderer) const override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the move described by board. </summary>
+	/// <summary>	
+	///		Funkcja aktualizacji poruszania się krzaka. Nie robi nic, ponieważ krzak nie 
+	///		może sie poruszać.
+	///</summary>
 	///
-	/// <param name="board">	[in,out] The board. </param>
+	/// <param name="board">	Obiekt planszy. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void updateMove(class Board& board) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the action described by board. </summary>
+	/// <summary>	Funkcja aktualizacji akcji krzaka. </summary>
 	///
-	/// <param name="board">	[in,out] The board. </param>
+	/// <param name="board">	Obiekt planszy. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void updateAction(class Board& board) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca animację raz na klatkę. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy klatkami animacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void update(float deltaTime) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a position. </summary>
+	/// <summary>	Funkcja ustawiająca pozycję. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Nowa pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setPos(const glm::tvec2<std::int32_t>& pos);
 
 private:
-	/// <summary>	The real position. </summary>
+	/// <summary>	Rzeczywista pozycja krzaka. </summary>
 	glm::vec2 mRealPos;
 
-	/// <summary>	Resources. </summary>
+	/// <summary>	Obiekt sprite dla krzaka. </summary>
 	std::shared_ptr<class Sprite> mSprite;
 };
 

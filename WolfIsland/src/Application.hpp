@@ -1,8 +1,3 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Application.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "gl_core_3_3.hpp"
@@ -27,13 +22,14 @@
 #include "MenuPanel.hpp"
 #include "Button.hpp"
 
-/// <summary>	Exception for signalling application init errors. </summary>
+/// <summary>	Klasa wyjątku inicjalizacji obiektu aplikacji. </summary>
 class ApplicationInitException : public std::exception 
 {
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the what. </summary>
+	/// <summary>	Funkcja zwracająca informację o błędzie. </summary>
 	///
-	/// <returns>	Null if it fails, else a pointer to a const char. </returns>
+	/// <returns>	Informacja o błędzie. </returns>
+	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual const char* what() const noexcept
 	{
@@ -42,295 +38,341 @@ class ApplicationInitException : public std::exception
 };
 
 /// <summary>	
-///		An application. 
+///		Klasa reprezentująca obiekt główny aplikacji. Tworzy i przydziela zasoby poszczególnym 
+///		obiektom.
 ///		ą, ć, ę, ł, ń, ó, ś, ź, ż
 ///		Ą, Ć, Ę, Ł, Ń, Ó, Ś, Ź, Ż
 /// </summary>
 class Application
 {
 public:
-	/// <summary>	Default constructor, which doesn't do anything special. </summary>
+	/// <summary>	Domyślny konsturuktor. </summary>
 	Application();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor which calls function "init". </summary>
+	/// <summary>	Konstruktor initializujący aplikację. </summary>
 	///
-	/// <param name="windowTitle">	The window title. </param>
-	/// <param name="dimensions"> 	The dimensions. </param>
-	/// <param name="fullscreen"> 	(Optional) True to fullscreen. </param>
+	/// <param name="windowTitle">	Tytuł okna aplikacji. </param>
+	/// <param name="dimensions"> 	Rozmiary okna aplikacji. </param>
+	/// <param name="fullscreen"> 	[Opt] Prawda jeżeli włączyć tryb fullscreen. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Application(const std::string& windowTitle, const glm::tvec2<std::int32_t>& dimensions,
 		bool fullscreen = false);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Function which initializes application data and creates window. </summary>
+	/// <summary>	Funkcja initializująca aplikację. </summary>
 	///
-	/// <param name="windowTitle">	The window title. </param>
-	/// <param name="dimensions"> 	The dimensions. </param>
-	/// <param name="fullscreen"> 	(Optional) True to fullscreen. </param>
+	/// <param name="windowTitle">	Tytuł okna aplikacji. </param>
+	/// <param name="dimensions"> 	Rozmiary okna aplikacji. </param>
+	/// <param name="fullscreen"> 	[Opt] Prawda jeżeli włączyć tryb fullscreen. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void init(const std::string& windowTitle, const glm::tvec2<std::int32_t>& dimensions,
 		bool fullscreen = false);
 
-	/// <summary>	Default destructor. </summary>
+	/// <summary>	Domyślny destrukotor. </summary>
 	~Application();
 
-	/// <summary>	Application starting point, creates main loop. </summary>
+	/// <summary>	Punkt startowy aplikacji. </summary>
 	void run();
 
-	/// <summary>	Gets input from keyboard and mouse in every frame. </summary>
+	/// <summary>	Funkcja obsługująca wejście do aplikacji. </summary>
 	void grabInput();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Calculates logic of all entities in every fixed time step. </summary>
+	/// <summary>	Funkcja licząca logikę w pętli stałokrokowej. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Krok pomiędzy wywołaniami funkcji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void calculateLogic(double deltaTime);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates animation once in every frame. </summary>
+	/// <summary>	Funkcja aktualizująca animację raz na klatkę. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy klatkami. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void animationUpdate(double deltaTime);
 
-	/// <summary>	Renders all visible entities and hud elements. </summary>
+	/// <summary>	Funkcja rysująca aktualną scenę. </summary>
 	void renderScene();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the renderer. </summary>
+	/// <summary>	Funkcja zwracajaca obiekt renderera. </summary>
 	///
-	/// <returns>	The renderer. </returns>
+	/// <returns>	Obiekt renderera. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Renderer& getRenderer();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the dimensions. </summary>
+	/// <summary>	Funkcja zwracająca rozmiary okna. </summary>
 	///
-	/// <returns>	The dimensions. </returns>
+	/// <returns>	Rozmiary okna. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	glm::tvec2<std::int32_t> getDimensions();
 
-	/// <summary>	Resets the graphical user interface position. </summary>
+	/// <summary>	Funkcja ustawiająca położenie obiektów interfejsu użytkownika. </summary>
 	void resetGuiPosition();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the last scroll action. </summary>
+	/// <summary>	Funkcja pobierająca ostatnią akcję związaną z kółkiem myszy. </summary>
 	///
-	/// <returns>	The last scroll action. </returns>
+	/// <returns>	Ostatnia akcaj kółka myszy. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	std::int32_t getLastScrollAction();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets key state. </summary>
+	/// <summary>	Funkcja pobierająca stan przycisku klawiatury. </summary>
 	///
-	/// <param name="keyCode">	The key code. </param>
+	/// <param name="keyCode">	Kod przycisku. </param>
 	///
-	/// <returns>	True if it succeeds, false if it fails. </returns>
+	/// <returns>	Prawda jeżeli wciśnięty. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	bool getKeyState(int keyCode);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets mouse button state. </summary>
+	/// <summary>	Funkcja pobierająca stan przycisku myszki. </summary>
 	///
-	/// <param name="keyCode">		   	The key code. </param>
-	/// <param name="clickedThisFrame">	(Optional) True to clicked this frame. </param>
+	/// <param name="keyCode">		   	Kod przycisku. </param>
+	/// <param name="clickedThisFrame">	
+	///		[Opt] Prawda jeżeli ma reagować tylko na przycisk wciśnięty 
+	///		podczas tej trwania tej klatki animacji. 
+	///	</param>
 	///
-	/// <returns>	True if it succeeds, false if it fails. </returns>
+	/// <returns>	Prawda jeżeli wciśnięty. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	bool getMouseButtonState(int keyCode, bool clickedThisFrame = false);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets mouse position. </summary>
+	/// <summary>	Funkcja pobierająca pozycję myszki. </summary>
 	///
-	/// <returns>	The mouse position. </returns>
+	/// <returns>	Pozycja myszki. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	glm::vec2 getMousePosition();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets mouse normalized position. </summary>
+	/// <summary>	Funkcja pobierająca znormalizowaną pozycję myszki. </summary>
 	///
-	/// <returns>	The mouse normalized position. </returns>
+	/// <returns>	Znormalizowana pozycja myszki. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	glm::vec4 getMouseNormalizedPosition();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Spawn wolf. </summary>
+	/// <summary>	Funkcja dodająca wilka. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void spawnWolf(glm::tvec2<std::int32_t> pos);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Spawn hare. </summary>
+	/// <summary>	Funkcja dodająca zająca. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void spawnHare(glm::tvec2<std::int32_t> pos);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Spawn boulder. </summary>
+	/// <summary>	Funkcja dodająca głaz. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void spawnBoulder(glm::tvec2<std::int32_t> pos);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Spawn bush. </summary>
+	/// <summary>	Funkcja dodająca krzak. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void spawnBush(glm::tvec2<std::int32_t> pos);
 
-	/// <summary>	Size of the sprite. </summary>
+	/// <summary>	Stała określająca rozmiar kafelka podłoża. </summary>
 	static const float spriteSize;
-	/// <summary>	The random development. </summary>
+
+	/// <summary>	Maszyna generująca liczby pseudolosowe. </summary>
 	static std::random_device randomDev;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Callback, called when the glfw scroll. </summary>
+	/// <summary>	Callback GLFW reagujący na akcję kółka myszki. </summary>
 	///
-	/// <param name="window"> 	[in,out] If non-null, the window. </param>
-	/// <param name="xoffset">	The xoffset. </param>
-	/// <param name="yoffset">	The yoffset. </param>
+	/// <param name="window"> 	Obiekt okna przejmującego wywołanie. </param>
+	/// <param name="xoffset">	Offset x. </param>
+	/// <param name="yoffset">	Offset y. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	static void GlfwScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Callback, called when the glfw framebuffer size. </summary>
+	/// <summary>	Callback GLFW reagujący na zmiany rozmiarów okna. </summary>
 	///
-	/// <param name="window">	[in,out] If non-null, the window. </param>
-	/// <param name="width"> 	The width. </param>
-	/// <param name="height">	The height. </param>
+	/// <param name="window">	Obiekt okan przejmującego wywołanie. </param>
+	/// <param name="width"> 	Nowa szerokość bufora klatki. </param>
+	/// <param name="height">	Nowa wysokość bufora klatki. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	static void GlfwFramebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 private:
-	/// <summary>	Window and rendering. </summary>
-	GLFWwindow *mWnd;
-	/// <summary>	Stores information about glfw init state. </summary>
-	bool mIsGlfw;
-	/// <summary>	Stores real time difference between two frames. </summary>
-	double mRealDeltaTime;
-	/// <summary>	The renderer. </summary>
-	Renderer mRenderer;
-	/// <summary>	The color change. </summary>
-	float mColorChange;
-	
-	/// <summary>	Resources. </summary>
-	std::shared_ptr<Font> mFnt;
-	/// <summary>	The wolf male sprite sheet. </summary>
-	std::shared_ptr<SpriteSheet> mWolfMaleSpriteSheet;
-	/// <summary>	The wolf female sprite sheet. </summary>
-	std::shared_ptr<SpriteSheet> mWolfFemaleSpriteSheet;
-	/// <summary>	The hare sprite sheet. </summary>
-	std::shared_ptr<SpriteSheet> mHareSpriteSheet;
-	/// <summary>	The board sprite sheet. </summary>
-	std::shared_ptr<SpriteSheet> mBoardSpriteSheet;
-	/// <summary>	The graphical user interface sprite sheet. </summary>
-	std::shared_ptr<SpriteSheet> mGuiSpriteSheet;
-	/// <summary>	The boulder sprite. </summary>
-	std::shared_ptr<Sprite> mBoulderSprite;
-	/// <summary>	The bush sprite. </summary>
-	std::shared_ptr<Sprite> mBushSprite;
-
-	/// <summary>	Simulation objects. </summary>
-	Board mBoard;
-
-	/// <summary>	Menu controls. </summary>
-	MenuPanel mMenuPanel;
-	/// <summary>	The information panel. </summary>
-	InformationPanel mInfoPanel;
-	/// <summary>	The start button. </summary>
-	Button mStartButton;
-	/// <summary>	The none control. </summary>
-	Button mNoneButton;
-	/// <summary>	The wolf control. </summary>
-	Button mWolfButton;
-	/// <summary>	The hare control. </summary>
-	Button mHareButton;
-	/// <summary>	The boulder control. </summary>
-	Button mBoulderButton;
-	/// <summary>	The bush control. </summary>
-	Button mBushButton;
-	
-	/// <summary>	Gpu resources. </summary>
-	std::shared_ptr<VertexArray> mVaoText;
-	/// <summary>	The vao sprite. </summary>
-	std::shared_ptr<VertexArray> mVaoSprite;
-	/// <summary>	The vao sprite instanced. </summary>
-	std::shared_ptr<VertexArray> mVaoSpriteInstanced;
-
-	/// <summary>	The ortho matrix. </summary>
-	glm::mat4 mOrthoMatrix;
-	/// <summary>	The camera matrix. </summary>
-	glm::mat4 mCameraMatrix;
-
-	/// <summary>	Input related. </summary>
-	std::int32_t mVerticalScroll;
-	/// <summary>	State of the mouse last. </summary>
-	std::array<bool, 8> mMouseLastState;
-	/// <summary>	The camera position. </summary>
-	glm::vec2 mCameraPos;
-	/// <summary>	The camera move dir. </summary>
-	glm::vec2 mCameraMoveDir;
-	/// <summary>	The camera move multiplier. </summary>
-	float mCameraMoveMultiplier;
-	/// <summary>	The camera zoom. </summary>
-	float mCameraZoom;
-	/// <summary>	The tour timer. </summary>
-	float mTourTimer;
-	/// <summary>	The spawn object type key. </summary>
-	char mSpawnObjectTypeKey;
-	/// <summary>	True if object already spawned. </summary>
-	bool mObjectAlreadySpawned;
-	/// <summary>	The spawn position. </summary>
-	glm::tvec2<std::int32_t> mSpawnPos;
-
-	/// <summary>	Values that represent states. </summary>
+	/// <summary>	Wartości reprezentujące stan aplikacji. </summary>
 	enum class State
 	{
 		MENU,
 		SIMULATION
-	} mState;
+	};
+
+	/// <summary>	Obiekt okna GLFW </summary>
+	GLFWwindow *mWnd;
+
+	/// <summary>	Prawda jeżeli GLFW jest już zinicjalizowane. </summary>
+	bool mIsGlfw;
+
+	/// <summary>	Prawdziwy czas pomiędzy kolejnymi klatkami. </summary>
+	double mRealDeltaTime;
+
+	/// <summary>	Obiekt renderera. </summary>
+	Renderer mRenderer;
+
+	/// <summary>	Współczynnik zmiany koloru wody. </summary>
+	float mColorChange;
+	
+	/// <summary>	Obiekt czcionki. </summary>
+	std::shared_ptr<Font> mFnt;
+
+	/// <summary>	Zbiór spriteów dla samca wilka. </summary>
+	std::shared_ptr<SpriteSheet> mWolfMaleSpriteSheet;
+
+	/// <summary>	Zbiór spriteów dla samicy wilka. </summary>
+	std::shared_ptr<SpriteSheet> mWolfFemaleSpriteSheet;
+
+	/// <summary>	Zbiór spriteów dla zająca. </summary>
+	std::shared_ptr<SpriteSheet> mHareSpriteSheet;
+
+	/// <summary>	Zbiór spriteów dla planszy. </summary>
+	std::shared_ptr<SpriteSheet> mBoardSpriteSheet;
+
+	/// <summary>	Zbiór spriteów dla interfejzu użytkownika. </summary>
+	std::shared_ptr<SpriteSheet> mGuiSpriteSheet;
+
+	/// <summary>	Zbiór spriteów dla głazu. </summary>
+	std::shared_ptr<Sprite> mBoulderSprite;
+
+	/// <summary>	Zbiór spriteów dla krzaka. </summary>
+	std::shared_ptr<Sprite> mBushSprite;
+
+	/// <summary>	Obiekt planszy. </summary>
+	Board mBoard;
+
+	/// <summary>	Panel początkowy symulacji. </summary>
+	MenuPanel mMenuPanel;
+
+	/// <summary>	Panel zawierający informacjię o stanie symulacji. </summary>
+	InformationPanel mInfoPanel;
+
+	/// <summary>	Przycisk startowy. </summary>
+	Button mStartButton;
+
+	/// <summary>	Przycisk stawiania niczego. </summary>
+	Button mNoneButton;
+
+	/// <summary>	Przycisk stawiania wilka. </summary>
+	Button mWolfButton;
+
+	/// <summary>	Przycisk stawiania zająca. </summary>
+	Button mHareButton;
+
+	/// <summary>	Przycisk stawiania głazu. </summary>
+	Button mBoulderButton;
+
+	/// <summary>	Przycisk stawiania krzaka. </summary>
+	Button mBushButton;
+	
+	/// <summary>	Tablica stanów OpenGL dla obiektów tekstu. </summary>
+	std::shared_ptr<VertexArray> mVaoText;
+
+	/// <summary>	Tablica stanów OpenGL dla obiektów sprite. </summary>
+	std::shared_ptr<VertexArray> mVaoSprite;
+
+	/// <summary>	Tablica stanów OpenGL dla instancjonowanych obiektów sprite. </summary>
+	std::shared_ptr<VertexArray> mVaoSpriteInstanced;
+
+	/// <summary>	Macierz ortagonalna. </summary>
+	glm::mat4 mOrthoMatrix;
+
+	/// <summary>	Macierz kamery. </summary>
+	glm::mat4 mCameraMatrix;
+
+	/// <summary>	Pozycja kółka myszy. </summary>
+	std::int32_t mVerticalScroll;
+
+	/// <summary>	Ostatnie stany przycisków myszy. </summary>
+	std::array<bool, 8> mMouseLastState;
+
+	/// <summary>	Pozycja kamery. </summary>
+	glm::vec2 mCameraPos;
+
+	/// <summary>	Kierunek poruszania się kamery. </summary>
+	glm::vec2 mCameraMoveDir;
+
+	/// <summary>	Mnożnik szybkości poruszania się kamery. </summary>
+	float mCameraMoveMultiplier;
+
+	/// <summary>	Przybliżenie kamery. </summary>
+	float mCameraZoom;
+
+	/// <summary>	Czas tury. </summary>
+	float mTourTimer;
+
+	/// <summary>	Typ aktualnie stawianego obiektu. </summary>
+	char mSpawnObjectTypeKey;
+
+	/// <summary>	Prawda jeżeli postawiono już obiekt na tym miejscu. </summary>
+	bool mObjectAlreadySpawned;
+
+	/// <summary>	Pozycja do postawienia obiektu. </summary>
+	glm::tvec2<std::int32_t> mSpawnPos;
+
+	/// <summary>	Aktualny stan aplikacji. </summary>
+	State mState;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets mouseover spawn position. </summary>
+	/// <summary>	
+	///		Pobieranie pozycji myszy i przekształcanie jej na pozycję do postawienia nowego 
+	///		obiektu. 
+	///	</summary>
 	///
-	/// <returns>	The mouseover spawn position. </returns>
+	/// <returns>	Pozycja do postawienia obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	glm::tvec2<std::int32_t> getMouseoverSpawnPosition();
 
-	/// <summary>	Sets up the board. </summary>
+	/// <summary>	Ustawienie rozmiarów planszy. </summary>
 	void setupBoard();
-	/// <summary>	Sets up the wolf male sprite sheet. </summary>
+
+	/// <summary>	Wczytanie zasobów samca wilka. </summary>
 	void setupWolfMaleSpriteSheet();
-	/// <summary>	Sets up the wolf female sprite sheet. </summary>
+
+	/// <summary>	Wczytanie zasobów samicy wilka. </summary>
 	void setupWolfFemaleSpriteSheet();
-	/// <summary>	Sets up the hare sprite sheet. </summary>
+
+	/// <summary>	Wczytanie zasobów zająca. </summary>
 	void setupHareSpriteSheet();
-	/// <summary>	Sets up the board sprite sheet. </summary>
+
+	/// <summary>	Wczytanie zasobów planszy. </summary>
 	void setupBoardSpriteSheet();
-	/// <summary>	Sets up the graphical user interface sprite sheet. </summary>
+
+	/// <summary>	Wczytanie zasobów interfejsu użytkownika. </summary>
 	void setupGuiSpriteSheet();
 };
 

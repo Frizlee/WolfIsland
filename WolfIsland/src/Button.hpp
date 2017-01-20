@@ -1,119 +1,122 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\Button.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "GuiObject.hpp"
 #include <glm/vec2.hpp>
 
-/// <summary>	A button. </summary>
+/// <summary>	
+///		Klasa przyciku - elementu interfejsu użytkownika rysowanego za pomocą OpenGL. 
+/// </summary>
 class Button :	public GuiObject
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	Button();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor tworzący przycisk z podanych spriteów. </summary>
 	///
-	/// <param name="guiSpriteSheet">	 	The graphical user interface sprite sheet. </param>
-	/// <param name="spriteIndex">		 	Zero-based index of the sprite. </param>
-	/// <param name="pressedSpriteIndex">	Zero-based index of the pressed sprite. </param>
-	/// <param name="pos">				 	The position. </param>
-	/// <param name="renderer">			 	[in,out] The renderer. </param>
+	/// <param name="guiSpriteSheet">	 	Zbiór spriteów interfejsu użytkownika. </param>
+	/// <param name="spriteIndex">		 	Indeks nie wciśniętego sprite. </param>
+	/// <param name="pressedSpriteIndex">	Indeks wciśniętego sprite. </param>
+	/// <param name="pos">				 	Pozycja przycisku. </param>
+	/// <param name="renderer">			 	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	Button(std::shared_ptr<class SpriteSheet> guiSpriteSheet, std::int32_t spriteIndex,
 		std::int32_t pressedSpriteIndex, const glm::vec2& pos, class Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja tworząc przycisk z podanych spriteów. </summary>
 	///
-	/// <param name="guiSpriteSheet">	 	The graphical user interface sprite sheet. </param>
-	/// <param name="spriteIndex">		 	Zero-based index of the sprite. </param>
-	/// <param name="pressedSpriteIndex">	Zero-based index of the pressed sprite. </param>
-	/// <param name="pos">				 	The position. </param>
-	/// <param name="renderer">			 	[in,out] The renderer. </param>
+	/// <param name="guiSpriteSheet">	 	Zbiór spriteów interfejsu użytkownika. </param>
+	/// <param name="spriteIndex">		 	Indeks nie wciśniętego sprite. </param>
+	/// <param name="pressedSpriteIndex">	Indeks wciśniętego sprite. </param>
+	/// <param name="pos">				 	Pozycja przycisku. </param>
+	/// <param name="renderer">			 	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::shared_ptr<class SpriteSheet> guiSpriteSheet, std::int32_t spriteIndex,
 		std::int32_t pressedSpriteIndex, const glm::vec2& pos, class Renderer& renderer);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~Button();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca przycisk przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void draw(class Renderer& renderer) const override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Grab input. </summary>
+	/// <summary>	Funkcja obsługująca wejście do przycisku. </summary>
 	///
-	/// <param name="orthoMatrix">	The ortho matrix. </param>
-	/// <param name="app">		  	[in,out] The application. </param>
+	/// <param name="orthoMatrix">	
+	///		Macierz ortagonalna przedstawiająca skalę i położenię 
+	///		interfejsu urzytkownika. 
+	/// </param>
+	/// <param name="app">		  	Obiekt aplikcaji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void grabInput(const glm::mat4& orthoMatrix, class Application& app) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca stan przycisku. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy kolejnymi krokami pętli stałokrokowej. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void update(double deltaTime) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a position. </summary>
+	/// <summary>	Funkcja ustawiająca pozycję przycisku. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Pozycja przycisku. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setPos(const glm::vec2& pos);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets automatic unpress. </summary>
+	/// <summary>	Funkcja ustawiająca czy przycisk ma zostać automatycznie wyłączany. </summary>
 	///
-	/// <param name="state">	True to state. </param>
+	/// <param name="state">	Prawda jeśli przycisk ma być automatycznie wyłączany. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setAutoUnpress(bool state);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Query if this object is pressed. </summary>
+	/// <summary>	Funkcja sprawdzająca czy przycisk został wciśnięty. </summary>
 	///
-	/// <returns>	True if pressed, false if not. </returns>
+	/// <returns>	Prawda jężeli przycisk jest wciśnięty. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	bool isPressed() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets the press. </summary>
+	/// <summary>	Funkcja ustawiająca wciśnięcie przycisku. </summary>
 	///
-	/// <param name="state">	True to state. </param>
+	/// <param name="state">	Prawda - załączony. Fałsz - wyłączony. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setPress(bool state);
 
 private:
-	/// <summary>	True if pressed. </summary>
+	/// <summary>	Prawda jeżeli przycisk jest załączony. </summary>
 	bool mPressed;
-	/// <summary>	True to automatically unpress. </summary>
+
+	/// <summary>	Prawda jeśli przycisk ma być automatycznie wyłączany. </summary>
 	bool mAutoUnpress;
 
-	/// <summary>	The position. </summary>
+	/// <summary>	Pozycja przycisku. </summary>
 	glm::vec2 mPos;
 	
-	/// <summary>	Resources. </summary>
+	/// <summary>	Indeks sprite nie wciśniętego przycisku. </summary>
 	std::int32_t mSpriteIndex;
-	/// <summary>	Zero-based index of the pressed sprite. </summary>
+
+	/// <summary>	Indeks sprite wciśniętego przycisku. </summary>
 	std::int32_t mPressedSpriteIndex;
-	/// <summary>	The graphical user interface sprite sheet. </summary>
+
+	/// <summary>	Zbiór sprite interfejsu użytkownika. </summary>
 	std::shared_ptr<class SpriteSheet> mGuiSpriteSheet;
 };
 

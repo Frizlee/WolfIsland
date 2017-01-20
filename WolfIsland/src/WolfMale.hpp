@@ -1,8 +1,3 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\WolfMale.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include <glm/vec2.hpp>
@@ -12,104 +7,114 @@
 #include "FlipbookAnimation.hpp"
 
 
-/// <summary>	A wolf male. </summary>
+/// <summary>	
+///		Klasa reprezentująca obiekt symulacji jakim jest samiec wilka. Typ: "wolf_male" 
+/// </summary>
 class WolfMale : public GameObject
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	WolfMale();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konstruktor tworzący wilka z podanych zasobów. </summary>
 	///
-	/// <param name="spriteSheet">	The sprite sheet. </param>
+	/// <param name="spriteSheet">	Zestaw spriteów dla wilka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	WolfMale(std::shared_ptr<class SpriteSheet> spriteSheet);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja tworząca wilka z podanych zasobów. </summary>
 	///
-	/// <param name="spriteSheet">	The sprite sheet. </param>
+	/// <param name="spriteSheet">	Zestaw spriteów dla wilka. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::shared_ptr<class SpriteSheet> spriteSheet);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~WolfMale();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets real position. </summary>
+	/// <summary>	Funkcja zwracająca rzeczywistą pozycję wilka. </summary>
 	///
-	/// <returns>	The real position. </returns>
+	/// <returns>	Rzeczywista pozycja wilka. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const glm::vec2& getRealPos();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca wilka przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void draw(class Renderer& renderer) const override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the move described by board. </summary>
+	/// <summary>	Funkcja aktualizacji poruszania się wilka. </summary>
 	///
-	/// <param name="board">	[in,out] The board. </param>
+	/// <param name="board">	Obiekt planszy. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void updateMove(class Board& board) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the action described by board. </summary>
+	/// <summary>	Funkcja aktualizacji akcji wilka. </summary>
 	///
-	/// <param name="board">	[in,out] The board. </param>
+	/// <param name="board">	Obiekt planszy. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void updateAction(class Board& board) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca animację raz na klatkę. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy klatkami animacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void update(float deltaTime) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a position. </summary>
+	/// <summary>	Funkcja ustawiająca pozycję. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Nowa pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setPos(const glm::tvec2<std::int32_t>& pos);
 
 private:
-	/// <summary>	The real position. </summary>
+	/// <summary>	Rzeczywista pozycja wilka. </summary>
 	glm::vec2 mRealPos;
-	/// <summary>	The random disorder. </summary>
+
+	/// <summary>	Losowy odchył o pozycji. </summary>
 	glm::vec2 mRandomDisorder;
 
-	/// <summary>	Animations. </summary>
+	/// <summary>	Tablica obiekt animacji typu Flipbook dla wilka. </summary>
 	std::array<FlipbookAnimation, 10> mAnimations;
-	/// <summary>	The current animation. </summary>
+
+	/// <summary>	Aktualna animacja wilka. </summary>
 	std::uint32_t mCurrentAnimation;
-	/// <summary>	The current idle. </summary>
+
+	/// <summary>	Aktualna animacja spoczynkowa. </summary>
 	std::uint32_t mCurrentIdle;
-	/// <summary>	The transition start position. </summary>
+
+	/// <summary>	Punkt rozpoczęcia przemieszczania. </summary>
 	glm::vec2 mTransitionStartPos;
-	/// <summary>	The transition timer. </summary>
+
+	/// <summary>	Czas przemieszczania. </summary>
 	float mTransitionTimer;
-	/// <summary>	The corpse timer. </summary>
+
+	/// <summary>	Czas wyświetlania ciała wilka. </summary>
 	float mCorpseTimer;
 
-	/// <summary>	Logic. </summary>
+	/// <summary>	Prawda jeżeli wilk goni zająca. </summary>
 	bool mChaseHare;
-	/// <summary>	The fat. </summary>
+
+	/// <summary>	Tłuszcz wilka, jeżeli spadnie do 0 to wilk umrze. </summary>
 	float mFat;
-	/// <summary>	The mate tour timer. </summary>
+
+	/// <summary>	Licznik czasu po którym wilk może łączyć się w parę z wilczycą. </summary>
 	std::uint32_t mMateTourTimer;
 };
 

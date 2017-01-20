@@ -1,31 +1,29 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\InformationPanel.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "GuiObject.hpp"
 #include <glm/vec2.hpp>
 
 
-/// <summary>	Panel for editing the information. </summary>
+/// <summary>	
+///		Klasa panelu zawierającego informacje o stanie symulacji. Jest to element 
+///		interfejsu użytkownika.
+/// </summary>
 class InformationPanel : public GuiObject
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	InformationPanel();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Constructor. </summary>
+	/// <summary>	Konsturktor tworzący panel informacyjny z podanych zasobów. </summary>
 	///
-	/// <param name="guiSpriteSheet">	   	The graphical user interface sprite sheet. </param>
-	/// <param name="wolfMaleCouterText">  	The wolf male couter text. </param>
-	/// <param name="woflFemaleCouterText">	The wofl female couter text. </param>
-	/// <param name="hareCouterText">	   	The hare couter text. </param>
-	/// <param name="boulderCouterText">   	The boulder couter text. </param>
-	/// <param name="bushCouterText">	   	The bush couter text. </param>
-	/// <param name="pos">				   	The position. </param>
-	/// <param name="renderer">			   	[in,out] The renderer. </param>
+	/// <param name="guiSpriteSheet">	   	Zestaw sprite interfejsu użytkownika. </param>
+	/// <param name="wolfMaleCouterText">  	Obiekt tekstu dla licznika samców wilków. </param>
+	/// <param name="woflFemaleCouterText">	Obiekt tekstu dla licznika samic wilków. </param>
+	/// <param name="hareCouterText">	   	Obiekt tekstu dla licznika zająców. </param>
+	/// <param name="boulderCouterText">   	Obiekt tekstu dla licznika głazów. </param>
+	/// <param name="bushCouterText">	   	Obiekt tekstu dla licznika krzaków. </param>
+	/// <param name="pos">				   	Pozycja panelu. </param>
+	/// <param name="renderer">			   	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	InformationPanel(std::shared_ptr<class SpriteSheet> guiSpriteSheet, 
@@ -37,16 +35,16 @@ public:
 		const glm::vec2& pos, class Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Creates this object. </summary>
+	/// <summary>	Funkcja tworząca panel informacyjny z podanych zasobów. </summary>
 	///
-	/// <param name="guiSpriteSheet">	   	The graphical user interface sprite sheet. </param>
-	/// <param name="wolfMaleCouterText">  	The wolf male couter text. </param>
-	/// <param name="woflFemaleCouterText">	The wofl female couter text. </param>
-	/// <param name="hareCouterText">	   	The hare couter text. </param>
-	/// <param name="boulderCouterText">   	The boulder couter text. </param>
-	/// <param name="bushCouterText">	   	The bush couter text. </param>
-	/// <param name="pos">				   	The position. </param>
-	/// <param name="renderer">			   	[in,out] The renderer. </param>
+	/// <param name="guiSpriteSheet">	   	Zestaw sprite interfejsu użytkownika. </param>
+	/// <param name="wolfMaleCouterText">  	Obiekt tekstu dla licznika samców wilków. </param>
+	/// <param name="woflFemaleCouterText">	Obiekt tekstu dla licznika samic wilków. </param>
+	/// <param name="hareCouterText">	   	Obiekt tekstu dla licznika zająców. </param>
+	/// <param name="boulderCouterText">   	Obiekt tekstu dla licznika głazów. </param>
+	/// <param name="bushCouterText">	   	Obiekt tekstu dla licznika krzaków. </param>
+	/// <param name="pos">				   	Pozycja panelu. </param>
+	/// <param name="renderer">			   	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void create(std::shared_ptr<class SpriteSheet> guiSpriteSheet,
@@ -57,67 +55,78 @@ public:
 		std::shared_ptr<class Text> bushCouterText,
 		const glm::vec2& pos, class Renderer& renderer);
 
-	/// <summary>	Destructor. </summary>
+	/// <summary>	Domyślny destruktor. </summary>
 	~InformationPanel();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca panel przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void draw(class Renderer& renderer) const override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Grab input. </summary>
+	/// <summary>	Funkcja obsługująca wejście do panelu. </summary>
 	///
-	/// <param name="orthoMatrix">	The ortho matrix. </param>
-	/// <param name="app">		  	[in,out] The application. </param>
+	/// <param name="orthoMatrix">	
+	///		Macierz ortagonalna przedstawiająca skalę i położenię 
+	///		interfejsu urzytkownika. 
+	/// </param>
+	/// <param name="app">		  	Obiekt aplikacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void grabInput(const glm::mat4& orthoMatrix, class Application& app) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca stan panelu. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy kolejnymi krokami pętli stałokrokowej. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void update(double deltaTime) override;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the counters. </summary>
+	/// <summary>	Funkcja aktualizująca stan liczników. </summary>
 	///
-	/// <param name="counters">	The counters. </param>
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="counters">	
+	///		Tablica wartości liczników. Kolejno: sance wilków, samice wilków,
+	///		zające, głazy, krzaki. 
+	///	</param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void updateCounters(const std::array<std::int32_t, 5>& counters, Renderer& renderer);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a position. </summary>
+	/// <summary>	Funkcja ustawiająca pozycję panelu. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Nowa pozycja panelu. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setPos(const glm::vec2& pos);
 
 private:
 
-	/// <summary>	The position. </summary>
+	/// <summary>	Pozycja panelu. </summary>
 	glm::vec2 mPos;
 
-	/// <summary>	Resources. </summary>
+	/// <summary>	Zbiór spriteów interfejsu użytkownika. </summary>
 	std::shared_ptr<class SpriteSheet> mGuiSpriteSheet;
-	/// <summary>	The wolf male couter text. </summary>
+
+	/// <summary>	Obiekt tekstu dla licznika samców wilków. </summary>
 	std::shared_ptr<class Text> mWolfMaleCouterText;
-	/// <summary>	The wolf female couter text. </summary>
+
+	/// <summary>	Obiekt tekstu dla licznika samic wilków. </summary>
 	std::shared_ptr<class Text> mWolfFemaleCouterText;
-	/// <summary>	The hare couter text. </summary>
+
+	/// <summary>	Obiekt tekstu dla licznika zająców. </summary>
 	std::shared_ptr<class Text> mHareCouterText;
-	/// <summary>	The boulder couter text. </summary>
+
+	/// <summary>	Obiekt tekstu dla licznika głazów. </summary>
 	std::shared_ptr<class Text> mBoulderCouterText;
-	/// <summary>	The bush couter text. </summary>
+
+	/// <summary>	Obiekt tekstu dla licznika krzaków. </summary>
 	std::shared_ptr<class Text> mBushCouterText;
 };
 

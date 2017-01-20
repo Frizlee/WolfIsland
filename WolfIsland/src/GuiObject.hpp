@@ -1,43 +1,42 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\GuiObject.hpp
-//
-// summary:	
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include <glm/mat4x4.hpp>
 #include "gl_core_3_3.hpp"
 
-/// <summary>	A graphical user interface object. </summary>
+/// <summary>	Klasa abstrakcyjna reprezentująca element interfejsu użytkownika. </summary>
 class GuiObject
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konstruktor. </summary>
 	GuiObject();
-	/// <summary>	Destructor. </summary>
+
+	/// <summary>	Domyślny destruktor. </summary>
 	virtual ~GuiObject() = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca element przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual void draw(class Renderer& renderer) const = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Grab input. </summary>
+	/// <summary>	Funkcja obsługująca wejście do elementu. </summary>
 	///
-	/// <param name="orthoMatrix">	The ortho matrix. </param>
-	/// <param name="app">		  	[in,out] The application. </param>
+	/// <param name="orthoMatrix">	
+	///		Macierz ortagonalna przedstawiająca skalę i położenię 
+	///		interfejsu urzytkownika. 
+	/// </param>
+	/// <param name="app">		  	Obiekt aplikacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual void grabInput(const glm::mat4& orthoMatrix, class Application& app) = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca stan elementu. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy kolejnymi krokami pętli stałokrokowej. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual void update(double deltaTime) = 0;

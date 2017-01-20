@@ -1,124 +1,124 @@
-///-------------------------------------------------------------------------------------------------
-// file:	src\GameObject.hpp
-//
-// summary:
-///-------------------------------------------------------------------------------------------------
 #pragma once
 #include "Prerequisites.hpp"
 #include "gl_core_3_3.hpp"
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 
-/// <summary>	A game object. </summary>
+/// <summary>	Klasa abstrakcyjna reprezentująca obiekt symulacji. </summary>
 class GameObject
 {
 public:
-	/// <summary>	Default constructor. </summary>
+	/// <summary>	Domyślny konsturktor. </summary>
 	GameObject();
-	/// <summary>	Destructor. </summary>
+
+	/// <summary>	Domyślny destruktor. </summary>
 	virtual ~GameObject() = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Draws the given renderer. </summary>
+	/// <summary>	Funkcja rysująca obiekt przy pomocy renderera. </summary>
 	///
-	/// <param name="renderer">	[in,out] The renderer. </param>
+	/// <param name="renderer">	Obiekt renderera. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual void draw(class Renderer& renderer) const = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the move described by board. </summary>
+	/// <summary>	Funkcja aktualizacji poruszania się obiektu. </summary>
 	///
-	/// <param name="board">	[in,out] The board. </param>
+	/// <param name="board">	Obiekt planszy. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual void updateMove(class Board& board) = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the action described by board. </summary>
+	/// <summary>	Funkcja aktualizacji akcji obiektu. </summary>
 	///
-	/// <param name="board">	[in,out] The board. </param>
+	/// <param name="board">	Obiekt planszy. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual void updateAction(class Board& board) = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Updates the given deltaTime. </summary>
+	/// <summary>	Funkcja aktualizująca animację raz na klatkę. </summary>
 	///
-	/// <param name="deltaTime">	The delta time. </param>
+	/// <param name="deltaTime">	Czas pomiędzy klatkami animacji. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual void update(float deltaTime) = 0;
 
-	/// <summary>	Saves the current position. </summary>
+	/// <summary>	Funkcja zapisująca aktualną pozycję. </summary>
 	void saveCurrentPos();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets the position. </summary>
+	/// <summary>	Funkcja zwracająca aktualną pozycję. </summary>
 	///
-	/// <returns>	The position. </returns>
+	/// <returns>	Aktualna pozycja. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const glm::tvec2<std::int32_t>& getPos() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets saved position. </summary>
+	/// <summary>	Funkcja zwracająca zapisaną pozycję. </summary>
 	///
-	/// <returns>	The saved position. </returns>
+	/// <returns>	Zapisana pozycja. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const glm::tvec2<std::int32_t>& getSavedPos() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets a position. </summary>
+	/// <summary>	Funkcja ustawiająca pozycję. </summary>
 	///
-	/// <param name="pos">	The position. </param>
+	/// <param name="pos">	Nowa pozycja. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	virtual void setPos(const glm::tvec2<std::int32_t>& pos) = 0;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Gets object type. </summary>
+	/// <summary>	Funkcja zwracająca string przedstawiający typ obiektu. </summary>
 	///
-	/// <returns>	The object type. </returns>
+	/// <returns>	Ciąg specyficzny dla danego typu obiektu. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	const std::string& getObjectType();
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Sets an active. </summary>
+	/// <summary>	Funkcja aktywująca/dezaktywująca obiekt. </summary>
 	///
-	/// <param name="state">	True to state. </param>
+	/// <param name="state">	Prawda aktywuje obiekt. </param>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	void setActive(bool state);
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Query if this object is active. </summary>
+	/// <summary>	Funkcja sprawdzająca czy obiekt jest aktywny. </summary>
 	///
-	/// <returns>	True if active, false if not. </returns>
+	/// <returns>	Prawda jeżeli obiekt jest aktywny. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	bool isActive() const;
 
 	///--------------------------------------------------------------------------------------------
-	/// <summary>	Query if this object is ready to delete. </summary>
+	/// <summary>	Funkcja sprawdzająca czy obiekt jest gotowy do usunięcia. </summary>
 	///
-	/// <returns>	True if ready to delete, false if not. </returns>
+	/// <returns>	Prawda jeżeli obiekt jest gotowy do usunięcia. </returns>
 	/// 
 	///--------------------------------------------------------------------------------------------
 	bool isReadyToDelete() const;
 
 protected:
-	/// <summary>	The type. </summary>
+	/// <summary>	Ciąg specyficzny dla danego typu obiektu. </summary>
 	std::string mType;
-	/// <summary>	The position. </summary>
+
+	/// <summary>	Pozycja obiektu. </summary>
 	glm::tvec2<std::int32_t> mPos;
-	/// <summary>	The saved position. </summary>
+
+	/// <summary>	Zapisana pozycja obiektu. </summary>
 	glm::tvec2<std::int32_t> mSavedPos;
-	/// <summary>	True to active. </summary>
+
+	/// <summary>	Prawda jeżeli obiekt jest aktywny. </summary>
 	bool mActive;
-	/// <summary>	True to ready to delete. </summary>
+
+	/// <summary>	Prawda jeżeli obiekt jest gotowy do usunięcia. </summary>
 	bool mReadyToDelete;
 };
 
